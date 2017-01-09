@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.110"
+let ip = "192.168.1.106"
 let domain = "http://\(ip)/phutungmoto"
 class Constants {
     static let MY_TEXT_COLOR:UIColor = UIColor(colorLiteralRed: 0.83, green: 0.82, blue: 0.81, alpha: 1)
@@ -107,6 +107,11 @@ enum UI:String {
     
     case BTN_FORGOTPASS = "RESET MẬT KHẨU"
     case BTN_UPDATE = "CẬP NHẬT"
+    
+    case DAY = "ngày trước"
+    case HOUR = "giờ trước"
+    case MINUTE = "phút trước"
+    case NOW = "Vừa xong"
     
     func getText() -> String {
         return self.rawValue

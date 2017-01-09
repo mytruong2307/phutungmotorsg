@@ -25,6 +25,7 @@ class IntroController: UIViewController {
         imgLogo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9).isActive = true
         imgLogo.heightAnchor.constraint(equalTo: imgLogo.widthAnchor, multiplier: 1).isActive = true
         // Do any additional setup after loading the view.
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

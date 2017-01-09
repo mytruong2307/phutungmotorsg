@@ -85,16 +85,49 @@ extension Dictionary {
 }
 
 extension String {
-    func getDate() -> String {
+    func getDate(full:Bool = true) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.S"           // Note: S is fractional second
-        let dateFromString = dateFormatter.date(from: self)      // "Nov 25, 2015, 4:31 AM" as NSDate
-        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateFromString = dateFormatter.date(from: self)             
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat = "dd/MM/YYYY"
-        
-        return dateFormatter2.string(from: dateFromString!)
+        if full {
+            dateFormatter2.dateFormat = "dd/MM/YYYY"
+            return dateFormatter2.string(from: dateFromString!)
+        } else {
+            dateFormatter2.dateFormat = "dd/MM"
+            return dateFormatter2.string(from: dateFromString!)
+        }
     }
+    
+    
+    func getDurationTime() -> String {
+        let cal = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let created = dateFormatter.date(from: self)
+        
+        let diff = cal.dateComponents([.day,.hour,.minute], from: created!, to: Date())
+        if diff.day! == 0 {
+            if diff.hour! <= 0 {
+                if diff.minute == 0 {
+                    return getTextUI(ui: UI.NOW)
+                } else {
+                    return "\(diff.minute!) " + getTextUI(ui: UI.MINUTE)
+                }
+            } else {
+                return "\(diff.hour!) " + getTextUI(ui: UI.HOUR)
+            }
+        } else {
+            if diff.day! > 365 {
+                return getDate()
+            } else if diff.day! > 14 {
+                return getDate(full: false)
+            } else {
+                return "\(diff.day!) " + getTextUI(ui: UI.DAY)
+            }
+        }
+    }
+    
 }
 
 extension UIViewController
@@ -449,6 +482,21 @@ func convertDateFromMySQL(strFromMySql:String) -> String? {
     } else {
         return nil
     }
+}
+
+func ramdomString(numberCharacter:Int,characters:Array<Character>?) -> String{
+    let charactersDefault:Array<Character> = ["q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m","Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","^","&"]
+    var str:String = ""
+    for _ in 1...numberCharacter{
+        if let characters = characters{
+            let rd:Int = Int(arc4random()) % characters.count
+            str += "\(characters[rd])"
+        }else{
+            let rd:Int = Int(arc4random()) % charactersDefault.count
+            str += "\(charactersDefault[rd])"
+        }
+    }
+    return str
 }
 
 func showLog(mess:Any) {

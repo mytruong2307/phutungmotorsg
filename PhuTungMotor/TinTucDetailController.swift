@@ -47,15 +47,7 @@ class TinTucDetailController: BaseController {
         var noidung:String = tintuc.noidung
         noidung = noidung.replacingOccurrences(of: "localhost", with: ip) //Su dung cho localhost
         //Dua title vao html
-        var title = "<h3 style = 'color:#134267'>" + tintuc.tieude
-        let date = tintuc.created_at.getDate()
-        showLog(mess: date)
-        if let ngay = convertDateFromMySQL(strFromMySql: tintuc.created_at) {
-            title += " (" +  ngay + ")</h3>"
-        } else {
-            title += "</h3>"
-        }
-        showLog(mess: title)
+        let title = "<h3 style = 'color:#134267'>" + tintuc.tieude + " (" +  tintuc.created_at.getDate() + ")</h3>"
         //Kich thuoc chuan cua hinh
         let sizeImage = "style='width:\(view.frame.width - 15)px;height:\(view.frame.width * 0.8)px'"
         let img = "<img src = '" + linkHinh + "/" + tintuc.hinhtin + "' \(sizeImage)/>"
@@ -67,7 +59,6 @@ class TinTucDetailController: BaseController {
         }
         //Doi dau " thanh ' de hien hinh
         noidung = noidung.replacingOccurrences(of: "\"", with: "'")
-        showLog(mess: noidung)
         wv.loadHTMLString(noidung, baseURL: nil)
     }
 }
