@@ -1,0 +1,6 @@
+framework module Pods_PhuTungMotor {
+  umbrella header "Pods-PhuTungMotor-umbrella.h"
+
+  export *
+  module * { export * }
+}
