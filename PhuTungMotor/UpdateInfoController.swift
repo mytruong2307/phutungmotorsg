@@ -403,7 +403,7 @@ class UpdateInfoController: BaseController {
                             self.user.setValue(dic, forKey: "email")
                             self.user.synchronize()
                         }
-                        let scr = HomeController()
+                        let scr = TrangChuController()
                         self.navigationController?.pushViewController(scr, animated: true)
                     })
                     

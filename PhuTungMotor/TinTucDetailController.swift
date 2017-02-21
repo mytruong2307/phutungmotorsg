@@ -27,7 +27,7 @@ class TinTucDetailController: BaseController {
     func setupView() {
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         //add webview
-        view.addViewFullScreen(views: wv)
+        uvMain.addViewFullScreen(views: wv)
         
     }
     

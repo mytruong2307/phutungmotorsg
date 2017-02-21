@@ -8,8 +8,9 @@
 
 import UIKit
 
-class IntroController: UIViewController {
+var arrLoaiXe:Array<LoaiXe> = []
 
+class IntroController: UIViewController {
     var imgLogo:UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,15 +36,28 @@ class IntroController: UIViewController {
         UIView.animate(withDuration: 0.5) {
             self.imgLogo.transform = CGAffineTransform(scaleX: 1, y: 1)
         }
-        self.perform(#selector(IntroController.GotoScreen), with: nil, afterDelay: 1.5)
+        setupDataLoaiXe()
     }
     
     func GotoScreen()
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let nav = UINavigationController()
-        nav.viewControllers = [HomeController()]
+        nav.viewControllers = [TrangChuController()]
         appDelegate.window?.rootViewController = nav
         navigationController?.pushViewController(nav, animated: true)
+    }
+    
+    func setupDataLoaiXe() {
+        sendRequestNoLoading(linkAPI: API.BIKETYPE) { (object) in
+            if object?[getResultAPI(link: API.DATA_RES)] as! String == getResultAPI(link: API.RES_OK) {
+                if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String,Any>> {
+                    for i in data {
+                        arrLoaiXe.append(LoaiXe(loaixe: i))
+                    }
+                    self.perform(#selector(IntroController.GotoScreen), with: nil, afterDelay: 1)
+                }
+            }
+        }
     }
 }

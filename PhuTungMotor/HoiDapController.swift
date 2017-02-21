@@ -13,6 +13,7 @@ class HoiDapController: BaseController {
     
     var page = 1
     var arrHoiDap:Array<HoiDap> = []
+    var flag = true
     let collectHoiDap:UICollectionView = {
         let v = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -41,15 +42,35 @@ class HoiDapController: BaseController {
     }
     
     func loadData() {
-        sendRequestToServer(linkAPI: API.FAQ, param: nil, method: Method.get, extraLink: "8/\(page)") { (object) in
-            if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String,Any>> {
-                for hoidap in data {
-                    self.arrHoiDap.append(HoiDap(dic: hoidap))
+        if flag {
+            if page > 1 {
+                sendRequestNoLoading(linkAPI: API.FAQ, param: nil, method: Method.get, extraLink: "8/\(page)", completion: { (object) in
+                    if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String,Any>> {
+                        self.page += 1
+                        for hoidap in data {
+                            self.arrHoiDap.append(HoiDap(dic: hoidap))
+                        }
+                        self.collectHoiDap.reloadData()
+                    } else {
+                        self.flag = false
+                    }
+                })
+            } else {
+                sendRequestToServer(linkAPI: API.FAQ, param: nil, method: Method.get, extraLink: "8/\(page)") { (object) in
+                    if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String,Any>> {
+                        self.page += 1
+                        for hoidap in data {
+                            self.arrHoiDap.append(HoiDap(dic: hoidap))
+                        }
+                        self.collectHoiDap.reloadData()
+                    } else {
+                        self.flag = false
+                    }
                 }
-                self.collectHoiDap.reloadData()
             }
+            
         }
-        page += 1
+        
     }
     
     func setupCollect()  {
@@ -86,30 +107,28 @@ extension HoiDapController:UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let dichuyen = CATransform3DTranslate(CATransform3DIdentity, 500, 0, 0)
-        cell.layer.transform = dichuyen
-        UIView.animate(withDuration: 1 , animations: {
-            cell.layer.transform = CATransform3DIdentity
-        })
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-         showLog(mess: "more 1")
-        if indexPath.row >= arrHoiDap.count {
-             showLog(mess: "more 2")
-            loadData()
+        if page == 1 || flag {
+            let dichuyen = CATransform3DTranslate(CATransform3DIdentity, 500, 0, 0)
+            cell.layer.transform = dichuyen
+            UIView.animate(withDuration: 1 , animations: {
+                cell.layer.transform = CATransform3DIdentity
+            })
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        loadData()
-    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let scr = HoiDapDetailController()
         scr.hoidap = arrHoiDap[indexPath.row]
         navigationController?.pushViewController(scr, animated: true)
     }
-
-
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        if offsetY > contentHeight - scrollView.frame.size.height {
+            loadData()
+        }
+    }
+    
 }

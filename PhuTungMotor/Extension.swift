@@ -54,7 +54,7 @@ extension UIImageView
         act.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         act.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         act.startAnimating()
-        
+        showLog(mess: link)
         let url = URL(string: link)
         do {
             let data:Data = try Data(contentsOf: url!)
@@ -65,7 +65,12 @@ extension UIImageView
             }
             
         } catch {
-            printConsole(csl: CONSOLE.URLERROR)
+            DispatchQueue.main.async {
+                self.image = #imageLiteral(resourceName: "logo")
+                act.stopAnimating()
+                act.hidesWhenStopped = true
+            }
+            printConsole(csl: CONSOLE(rawValue: "\(CONSOLE.URLERROR): \(link)")!)
         }
     }
 }
@@ -88,7 +93,7 @@ extension String {
     func getDate(full:Bool = true) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateFromString = dateFormatter.date(from: self)             
+        let dateFromString = dateFormatter.date(from: self)
         let dateFormatter2 = DateFormatter()
         if full {
             dateFormatter2.dateFormat = "dd/MM/YYYY"
@@ -157,6 +162,47 @@ extension UIViewController
         alert.addAction(btnOK)
         alert.addAction(btnCancel)
         present(alert, animated: true, completion: nil)
+    }
+    
+    func showAlert2Action(title:String, mess:String, btnATitle:String, btnBTitle:String, actionA:@escaping ()->(), actionB:@escaping () -> ())  {
+        let alert:UIAlertController = UIAlertController(title: title, message: mess, preferredStyle: .alert)
+        let btnA:UIAlertAction = UIAlertAction(title: btnATitle, style: .default) { (btnA) in
+            actionA()
+        }
+        let btnB:UIAlertAction = UIAlertAction(title: btnBTitle, style: .default) { (btnB) in
+            actionB()
+        }
+        let btnCancel:UIAlertAction = UIAlertAction(title: "Huỷ", style: .cancel, handler: nil)
+        alert.addAction(btnA)
+        alert.addAction(btnB)
+        alert.addAction(btnCancel)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func downloadImageSanPham(sp:SanPham, completion:@escaping (Array<UIImage>)->()) {
+        sendRequestNoLoading(linkAPI: API.IMAGE, param: nil, method: Method.get, extraLink: "\(sp.id)") { (object) in
+            if object != nil {
+            if let res = object?[getResultAPI(link: API.DATA_RES)] as? String {
+                if res == getResultAPI(link: API.RES_OK) {
+                    if let data = object?["data"] as? Array<Dictionary<String,Any>> {
+                        var arr:Array<UIImage> = []
+                        for i in data {
+                            if let hinh = i["ten"] as? String {
+                                let link:String = getLinkImage(link: API.PRODUCT) + "/" + hinh
+                                self.getImageFromLink(link: link, completion: { (image) in
+                                    arr.append(image)
+                                    if arr.count == data.count {
+                                        completion(arr)
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+            }
+        }
+        
     }
     
     
@@ -248,17 +294,36 @@ extension UIViewController
                 } catch{
                     DispatchQueue.main.async {
                         showLog(mess: CONSOLE.JSON)
+                        showLog(mess: link)
                         completion(nil)
                     }
                 }
             } else {
                 DispatchQueue.main.async {
                     showLog(mess: CONSOLE.URLERROR)
+                    showLog(mess: link)
                     completion(nil)
                 }
                 
             }
-        }.resume()
+            }.resume()
+        
+    }
+    
+    func getImageFromLink(link:String, completion: @escaping (UIImage)->()) {
+        let queue = DispatchQueue(label: "loadhinh")
+        queue.async {
+            let url = URL(string: link)
+            do {
+                let data = try Data(contentsOf: url!)
+                DispatchQueue.main.async {
+                    completion(UIImage(data: data)!)
+                }
+            } catch {
+                showLog(mess: "Loi load hinh: \(link)")
+            }
+            
+        }
         
     }
     
@@ -306,10 +371,30 @@ extension UIViewController
         let url = URL(string: link)
         var request = URLRequest(url:url!)
         if method == .post {
-            
-            request.httpMethod = method.toString
-            let data = param?.convertToString().data(using: String.Encoding.utf8)
-            request.httpBody = data
+            let boundary = generateBoundaryString()
+            let body = NSMutableData()
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            for pr in param!{
+                if let image:UIImage = pr.value as? UIImage
+                {
+                    let data = UIImageJPEGRepresentation(image, 0.5)
+                    let fname:String = "\(getTime()).jpg"
+                    let mimetype = "image/png"
+                    body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Disposition:form-data; name=\"\(pr.key)\"; FileName=\"\(fname)\"\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Type: \(mimetype)\r\n\r\n".data(using: String.Encoding.utf8)!)
+                    body.append(data!)
+                    body.append("\r\n".data(using: String.Encoding.utf8)!)
+                }else{
+                    //----------upload them param
+                    body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Disposition: form-data; name=\"\(pr.key)\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("\(pr.value)\r\n".data(using: String.Encoding.utf8)!)
+                }
+                //    body.append("&ten=datnguyen".data(using: String.Encoding.utf8)!)
+                request.httpMethod = "POST"
+                request.httpBody = body as Data
+            }
         }
         let session = URLSession.shared
         session.dataTask(with: request) { (data, res, err) in
@@ -332,6 +417,7 @@ extension UIViewController
                             act.hidesWhenStopped = true
                             viewTam.removeFromSuperview()
                             self.view.layoutIfNeeded()
+                            showLog(mess: link)
                             completion(nil)
                         }
                     }
@@ -342,11 +428,13 @@ extension UIViewController
                         act.hidesWhenStopped = true
                         viewTam.removeFromSuperview()
                         self.view.layoutIfNeeded()
+                        showLog(mess: link)
                         completion(nil)
                     }
                 }
             } else {
                 printConsole(csl: CONSOLE.URLERROR)
+                showLog(mess: link)
                 DispatchQueue.main.async {
                     act.stopAnimating()
                     act.hidesWhenStopped = true
@@ -356,7 +444,27 @@ extension UIViewController
                 }
                 
             }
-         }.resume()
+            }.resume()
+    }
+}
+
+public extension UIWindow {
+    public var visibleViewController: UIViewController? {
+        return UIWindow.getVisibleViewControllerFrom(vc: self.rootViewController)
+    }
+    
+    public static func getVisibleViewControllerFrom(vc: UIViewController?) -> UIViewController? {
+        if let nc = vc as? UINavigationController {
+            return UIWindow.getVisibleViewControllerFrom(vc: nc.visibleViewController)
+        } else if let tc = vc as? UITabBarController {
+            return UIWindow.getVisibleViewControllerFrom(vc: tc.selectedViewController)
+        } else {
+            if let pvc = vc?.presentedViewController {
+                return UIWindow.getVisibleViewControllerFrom(vc: pvc)
+            } else {
+                return vc
+            }
+        }
     }
 }
 
@@ -384,6 +492,7 @@ func sendRequestNoLoading(linkAPI:API, param:Dictionary<String,Any>? = nil, meth
     session.dataTask(with: request) { (data, res, err) in
         if err == nil {
             do {
+                showLog(mess: data!)
                 let data = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
                 if let object = data as? Dictionary<String,Any> {
                     DispatchQueue.main.async {
@@ -391,24 +500,28 @@ func sendRequestNoLoading(linkAPI:API, param:Dictionary<String,Any>? = nil, meth
                     }
                 } else {
                     printConsole(csl: CONSOLE.DICTIONARY)
+                    showLog(mess: link)
                     DispatchQueue.main.async {
                         completion(nil)
                     }
                 }
             } catch{
+                showLog(mess: link)
                 printConsole(csl: CONSOLE.JSON)
                 DispatchQueue.main.async {
+                    showLog(mess: link)
                     completion(nil)
                 }
             }
         } else {
             printConsole(csl: CONSOLE.URLERROR)
             DispatchQueue.main.async {
+                showLog(mess: link)
                 completion(nil)
             }
             
         }
-    }.resume()
+        }.resume()
 }
 
 func getJson(link:String, completion:@escaping (Any?)->()) {
@@ -435,7 +548,7 @@ func getJson(link:String, completion:@escaping (Any?)->()) {
             }
             
         }
-    }.resume()
+        }.resume()
 }
 
 
@@ -525,3 +638,66 @@ func getAlertMessage(msg:ALERT) -> String {
 func printConsole(csl:CONSOLE) {
     csl.printConsole()
 }
+
+func generateBoundaryString() -> String
+{
+    return "Boundary-\(NSUUID().uuidString)"
+}
+
+func getTime() -> String{
+    let date = Date()
+    let calendar = Calendar.current
+    let hour = calendar.component(.hour, from: date)
+    let minutes = calendar.component(.minute, from: date)
+    let second = calendar.component(.second, from: date)
+    let nano = calendar.component(.nanosecond, from: date)
+    return "\(hour)-\(minutes)-\(second)-\(nano)"
+}
+func getDate()->String{
+    let date = Date()
+    let calendar = Calendar.current
+    let day = calendar.component(.day, from: date)
+    let month = calendar.component(.month, from: date)
+    let year = calendar.component(.year, from: date)
+    let hour = calendar.component(.hour, from: date)
+    let minutes = calendar.component(.minute, from: date)
+    return "\(day)/\(month)/\(year) \(hour):\(minutes)"
+}
+
+func showPrice(sp:SanPham)->NSMutableAttributedString{
+    let giagoc:Double = sp.giamgia + sp.gia
+    let gg = showVNCurrency(gia: giagoc)
+    let result:NSMutableAttributedString = NSMutableAttributedString(string: gg)
+    result.addAttribute(NSStrikethroughStyleAttributeName, value: 2, range: NSMakeRange(0, result.length))
+    return result
+}
+
+func showVNCurrency(gia:Double) -> String {
+    var giamoi:IntMax = IntMax (gia)
+    var result:String = ""
+    while giamoi >= 1000 {
+        let du = showNumber (so: giamoi % 1000)
+        if result != "" {
+            result = "\(du).\(result)"
+        } else {
+            result = "\(du)"
+        }
+        
+        giamoi = giamoi / 1000
+    }
+    result = "\(giamoi).\(result)"
+    return result
+}
+func showNumber(so:IntMax)->String {
+    var kq:String = ""
+    if so < 10 {
+        kq =  "00\(so)"
+    } else if so < 100 {
+        kq = "0\(so)"
+    } else {
+        kq = "\(so)"
+    }
+    return kq
+    
+}
+

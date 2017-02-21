@@ -15,6 +15,7 @@ class RegisterController: BaseController {
     var arrDuLieu:Array<Address> = []
     var khoangCach:CGFloat = 0
     var point:CGPoint = CGPoint()
+    var shopping = false // Đanhs dau mua hang
     
     let scroll:UIScrollView = {
         let v:UIScrollView = UIScrollView()
@@ -414,6 +415,8 @@ class RegisterController: BaseController {
                             self.txtEmail.becomeFirstResponder()
                         } else {
                             self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.REGISTEROK), complete: {
+                                let scr = LoginController()
+                                scr.shopping = self.shopping
                                 self.navigationController?.pushViewController(LoginController(), animated: true)
                             })
                         }

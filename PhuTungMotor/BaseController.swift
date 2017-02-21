@@ -9,7 +9,8 @@
 import UIKit
 
 var kh:KhachHang?
-var gioHang:Array<SanPham> = []
+var gioHang:Array<GioHang> = []
+var thanhtoan:Int = -1
 
 class BaseController: UIViewController {
     
@@ -87,6 +88,7 @@ class BaseController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setupNavigationBar()
         setupDataMenu()
         setupMenu()
@@ -94,13 +96,21 @@ class BaseController: UIViewController {
         setupGesture()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if self is ShoppingController {
+            lblCart.text = String (gioHang.count - 2)
+        } else {
+            gioHang = gioHang.filter({ return $0.soluong > 0 })
+            lblCart.text = String (gioHang.count)
+        }
+        
+    }
     func setupNavigationBar() {
         let bn = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 40))
         bn.contentMode = UIViewContentMode.scaleAspectFit
         bn.image = #imageLiteral(resourceName: "banner")
         self.navigationItem.titleView = bn
         //Gio hang
-        lblCart.text = String (gioHang.count)
         uvCart.addViewFullScreen(views: imgCart)
         let viewTam = UIView()
         viewTam.backgroundColor = UIColor.clear
@@ -126,12 +136,21 @@ class BaseController: UIViewController {
         self.navigationItem.leftBarButtonItem = leftButton
         
         let searchBtn = UIBarButtonItem(image: #imageLiteral(resourceName: "search"), style: .plain, target: self, action: #selector(BaseController.search))
-        
         self.navigationItem.rightBarButtonItems = [searchBtn, cartBtn]
     }
     
     func shoppingCart() {
-        showLog(mess: "shoppingCart")
+        if self is ShoppingController {
+            showLog(mess: "No change")
+        } else {
+            if gioHang.count == 0 {
+                showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.EMPTYCART))
+            } else {
+                let scr = ShoppingController()
+                navigationController?.pushViewController(scr, animated: true)
+            }
+        }
+        
     }
     func search() {
         showLog(mess: "Search")
@@ -229,7 +248,6 @@ class BaseController: UIViewController {
         }
     }
     
-    
     func openMenu() {
         UIView.animate(withDuration: 1) {
             if !self.isOpenMenu {
@@ -301,8 +319,12 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
                             self.user.removeObject(forKey: "email")
                             self.user.synchronize()
                         }
-                        let scr = HomeController()
-                        self.navigationController?.pushViewController(scr, animated: true)
+                        if self is TrangChuController {
+                            self.setupDataMenu()
+                            tableView.reloadData()
+                        } else {
+                            let _ = self.navigationController?.popToRootViewController(animated: true)
+                        }
                     } else if indexPath.row == 1 {
                         let scr = ChangePassController()
                         self.navigationController?.pushViewController(scr, animated: true)
@@ -315,7 +337,7 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
             default:
                 switch indexPath.row {
                 case 0:
-                    self.navigationController?.pushViewController(HomeController(), animated: true)
+                    let _ = self.navigationController?.popToRootViewController(animated: true)
                     break
                 case 1:
                     self.navigationController?.pushViewController(TinTucController(), animated: true)
@@ -324,7 +346,7 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
                     self.navigationController?.pushViewController(HoiDapController(), animated: true)
                     break
                 default:
-                    
+                    self.navigationController?.pushViewController(DonHangController(), animated: true)
                     break
                 }
                 break

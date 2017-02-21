@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.106"
+let ip = "192.168.1.104"
 let domain = "http://\(ip)/phutungmoto"
 class Constants {
     static let MY_TEXT_COLOR:UIColor = UIColor(colorLiteralRed: 0.83, green: 0.82, blue: 0.81, alpha: 1)
@@ -28,6 +28,11 @@ enum API:String {
     case CHANGEPASS = "changePass"
     case NEWS = "tintuc"
     case FAQ = "hoidap"
+    case HOME = "trangchu"
+    case IMAGE = "hinh"
+    case SHOPPING = "dathang"
+    case DONHANG = "donhang"
+    case DONHANGSANPHAM = "donhangsanpham"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -69,6 +74,20 @@ enum ALERT:String {
     case REGISTEROK = "Đăng ký thành công, check mail và kích hoạt tài khoản"
     case EMPTYTEXTFIELD = "Chưa điền đủ thông tin"
     case ERRORSERVER = "Server qúa tải"
+    case SHOPPING = "Đặt hàng"
+    case BUYPRODUCT = "Bạn có chắc đặt hàng sản phẩm này"
+    case EMPTYCART = "Bạn chưa chọn sản phầm nào"
+    case ADDMOREPRODUCT = "Sản phẩm này đã có trong giỏ hàng !!! Bạn muốn mua thêm 1 sản phẩm này nữa"
+    case DELETESHOPPING = "Bạn có muốn bỏ sản phẩm này khỏi giỏ hành?"
+    case UPDATESL = "Bạn có chắc cập nhất số lượng mới của sản phẩm này?"
+    case LOGINREGISTER = "Vui lòng đăng nhập để mua hàng !!!"
+    case LOGIN = "Đăng nhập"
+    case REGISTER = "Đăng ký"
+    case THANHTOAN = "Chọn hình thức thanh toán"
+    case TIENMAT = "Nhận hàng trả tiền"
+    case CHUYENKHOAN = "Chuyển khoản"
+    case CHUATHANHTOAN = "Bạn chưa chọn hình thức thanh toán !!!"
+    case SHOPPINGOK = "Đặt hàng thành công, bạn cần vào mail để xác nhận đơn hàng"
     
     func getAlertMessage() -> String{
         return self.rawValue
@@ -97,6 +116,33 @@ enum UI:String {
     case LBL_PHONE = "Điện thoại"
     case LBL_MALE = "Nam"
     case LBL_FEMALE = "Nữ"
+    case LBL_TRADEMARK = "DANH SÁCH CÁC LOẠI XE"
+    case LBL_PRODUCTNAME = "Tên: "
+    case LBL_PRODUCTCODE = "Mã: "
+    case LBL_BIKEKIND = "Loại xe: "
+    case LBL_PRODUCTPRICE = "Giá: "
+    case LBL_PRODUCTBASEPRICE = "Giá cũ: "
+    case LBL_PRODUCTTRADEMARK = "Hãng xe: "
+    case LBL_SUM = "TỔNG"
+    case LBL_SHOPPINGCART = "GIỎ HÀNG"
+    case LBL_DONHANGNO = "ĐƠN HÀNG SỐ: "
+    case LBL_CREATEDAT = "Ngày đặt:"
+    case LBL_CACHTHANHTOAN = "Cách thanh toán:"
+    case LBL_THANHTOAN = "Tình trạng:"
+    case LBL_TONGTIEN = "Tổng tiền:"
+    case LBL_TRANGTHAI = "Trạng thái:"
+    case LBL_TIENMAT = "Tiền mặt"
+    case LBL_CHUYENKHOAN = "Chuyển khoản"
+    case LBL_CHUATT = "Chưa thanh toán"
+    case LBL_DATT = "Đã thanh toán"
+    case LBL_DAXN = "Đã xác nhận"
+    case LBL_CHUAXN = "Chưa xác nhận"
+    case LBL_VANCHUYEN = "Đang vận chuyển"
+    case LBL_HUY = "Huỷ"
+    case LBL_HOANTHANH = "Thành công"
+    case LBL_LISTORDER = "DANH SÁCH ĐƠN HÀNG"
+    case LBL_NHAN = "x"
+    case LBL_BANG = "="
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -107,6 +153,12 @@ enum UI:String {
     
     case BTN_FORGOTPASS = "RESET MẬT KHẨU"
     case BTN_UPDATE = "CẬP NHẬT"
+    case BTN_SHOWMORE = "Xem thêm..."
+    case BTN_CART = "THÊM VÀO GIỎ HÀNG"
+    case BTN_SHOPPING = "ĐẶT HÀNG"
+    case BTN_UPDATENO = "SỬA"
+    case BTN_THANHTOAN = "CHỌN HÌNH THỨC THANH TOÁN"
+    case BTN_DETAIL = "Xem chi tiết..."
     
     case DAY = "ngày trước"
     case HOUR = "giờ trước"

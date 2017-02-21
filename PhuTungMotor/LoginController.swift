@@ -12,6 +12,7 @@ class LoginController: BaseController {
     
     var txtEmail, txtMatKhau:MyTextField!
     var remember = true
+    var shopping = false
     let lblTitle:UILabel = {
         let v = UILabel()
         v.textColor = Constants.MY_TEXT_COLOR
@@ -127,8 +128,14 @@ class LoginController: BaseController {
                                 user.setValue(dic, forKey: "email")
                                 user.synchronize()
                             }
-                            let scr = HomeController()
-                            self.navigationController?.pushViewController(scr, animated: true)
+                            if self.shopping {
+                                //Dat hang thanh cong
+                                let scr = ShoppingController()
+                                self.navigationController?.pushViewController(scr, animated: true)
+                            } else {
+                                let scr = TrangChuController()
+                                self.navigationController?.pushViewController(scr, animated: true)
+                            }
                         }
                     })
                 } else {
@@ -143,7 +150,6 @@ class LoginController: BaseController {
         } else {
             let scr = ForgotPassController()
             navigationController?.pushViewController(scr, animated: true)
-
         }
     }
 }
