@@ -58,7 +58,6 @@ struct SanPham {
         if let ten = sanpham["ten"] as? String {
             self.ten = ten
         }
-
         if let lx = sanpham["loaixe"] as? String {
             self.loaixe = lx
         }

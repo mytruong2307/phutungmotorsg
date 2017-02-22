@@ -90,6 +90,9 @@ enum ALERT:String {
     case CHUYENKHOAN = "Chuyển khoản"
     case CHUATHANHTOAN = "Bạn chưa chọn hình thức thanh toán !!!"
     case SHOPPINGOK = "Đặt hàng thành công, bạn cần vào mail để xác nhận đơn hàng"
+    case KHACHHANG = "Khách hàng"
+    case ADMIN = "Quản trị"
+    case CHONTRANG = "Bạn chọn vào trang nào?"
     
     func getAlertMessage() -> String{
         return self.rawValue

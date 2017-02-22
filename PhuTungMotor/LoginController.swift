@@ -118,24 +118,31 @@ class LoginController: BaseController {
                     }
                     let param = ["email":txtEmail.text!, "password":txtMatKhau.text!, "remember":rem]
                     sendRequestToServer(linkAPI: API.LOGIN, param: param, method: Method.post, extraLink: nil, completion: { (data) in
-                        if data?[getResultAPI(link: API.DATA_RES)] as! String == getResultAPI(link: API.RES_NOK) {
-                            self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
-                        } else {
-                            //Login OK
-                            let dic = data?["data"] as! Dictionary<String,Any>
-                            kh = KhachHang(khachhang: dic)
-                            if self.remember {
-                                let user = UserDefaults()
-                                user.setValue(dic, forKey: "email")
-                                user.synchronize()
-                            }
-                            
-                            if self.shopping {
-                                //Dat hang thanh cong
-                                let scr = ShoppingController()
-                                self.navigationController?.pushViewController(scr, animated: true)
+                        if let res = data?[getResultAPI(link: API.DATA_RES)] as? String {
+                            if res == getResultAPI(link: API.RES_NOK) {
+                                self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
                             } else {
-                                let _ = self.navigationController?.popToRootViewController(animated: true)
+                                //Login OK
+                                let dic = data?["data"] as! Dictionary<String,Any>
+                                kh = KhachHang(khachhang: dic)
+                                
+                                if self.remember {
+                                    let user = UserDefaults()
+                                    user.setValue(dic, forKey: "email")
+                                    user.synchronize()
+                                }
+                                if let quyen = data?["quyen"] as? Array<String> {
+                                    kh?.quyen = quyen
+                                    self.showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.ADMIN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: {
+                                        showLog(mess: "Vao trang nhan vien:")
+                                        showLog(mess: quyen)
+                                    }, actionB: {
+                                        self.changePageKhachHang()
+                                    })
+                                } else {
+                                    self.changePageKhachHang()
+                                }
+
                             }
                         }
                     })
@@ -151,6 +158,16 @@ class LoginController: BaseController {
         } else {
             let scr = ForgotPassController()
             navigationController?.pushViewController(scr, animated: true)
+        }
+    }
+    
+    func changePageKhachHang()  {
+        if self.shopping {
+            //Dat hang thanh cong
+            let scr = ShoppingController()
+            self.navigationController?.pushViewController(scr, animated: true)
+        } else {
+            let _ = self.navigationController?.popToRootViewController(animated: true)
         }
     }
 }

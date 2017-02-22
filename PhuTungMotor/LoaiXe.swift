@@ -20,8 +20,15 @@ struct LoaiXe {
     }
     
     init(loaixe:Dictionary<String,Any>) {
-        self.hinh = loaixe["hinh"] as! String
-        self.id = loaixe["id"] as! Int
-        self.ten = loaixe["ten"] as! String
+        self.init()
+        if let id = loaixe["id"] as? Int {
+            self.id = id
+        }
+        if let ten = loaixe["ten"] as? String {
+            self.ten = ten
+        }
+        if let hinh = loaixe["hinh"] as? String {
+            self.hinh = hinh
+        }
     }
 }

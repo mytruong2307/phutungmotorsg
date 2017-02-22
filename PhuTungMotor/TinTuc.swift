@@ -33,16 +33,36 @@ struct TinTuc {
         self.noibat = 0
     }
     init(dic:Dictionary<String,Any>) {
-        self.id = dic["id"] as! Int
-        self.tieude = dic["tieude"] as! String
-        self.nguontin = dic["nguontin"] as! String
-        self.tomtat = dic["tomtat"] as! String
-        self.noidung = dic["noidung"] as! String
-        self.hinhtin = dic["hinhtin"] as! String
-        self.nguoiviet = dic["nguoiviet"] as! String
-        self.created_at = dic["created_at"] as! String
-        self.updated_at = dic["updated_at"] as! String
-        self.noibat = dic["noibat"] as! Int
+        self.init()
+        if let id = dic["id"] as? Int {
+            self.id = id
+        }
+        if let noibat = dic["noibat"] as? Int {
+            self.noibat = noibat
+        }
+        if let tieude = dic["tieude"] as? String {
+            self.tieude = tieude
+        }
+        if let nguontin = dic["nguontin"] as? String {
+            self.nguontin = nguontin
+        }
+        if let tomtat = dic["tomtat"] as? String {
+            self.tomtat = tomtat
+        }
+        if let noidung = dic["noidung"] as? String {
+            self.noidung = noidung
+        }
+        if let hinhtin = dic["hinhtin"] as? String {
+            self.hinhtin = hinhtin
+        }
+        if let nguoiviet = dic["nguoiviet"] as? String {
+            self.nguoiviet = nguoiviet
+        }
+        if let created_at = dic["created_at"] as? String {
+            self.created_at = created_at
+        }
+        if let updated_at = dic["updated_at"] as? String {
+            self.updated_at = updated_at
+        }
     }
-    
 }

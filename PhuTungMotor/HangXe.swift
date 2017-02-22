@@ -13,9 +13,22 @@ struct HangXe {
     var ten:String
     var id:Int
     
+    init() {
+        self.hinh = ""
+        self.ten = ""
+        self.id = 0
+    }
+    
     init(hangxe:Dictionary<String,Any>) {
-        self.hinh = hangxe["hinh"] as! String
-        self.ten = hangxe["ten"] as! String
-        self.id = hangxe["id"] as! Int
+        self.init()
+        if let id = hangxe["id"] as? Int {
+            self.id = id
+        }
+        if let ten = hangxe["ten"] as? String {
+            self.ten = ten
+        }
+        if let hinh = hangxe["hinh"] as? String {
+            self.hinh = hinh
+        }
     }
 }

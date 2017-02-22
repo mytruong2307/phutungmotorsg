@@ -43,28 +43,47 @@ struct HoiDap {
     
     init(dic:Dictionary<String,Any>) {
         self.init()
-        self.id = dic["id"] as! Int
-        self.idkhachhang = dic["idkhachhang"] as! Int
-        self.ten = dic["ten"] as! String
-        self.email = dic["email"] as! String
-        self.dienthoai = dic["dienthoai"] as! String
-        self.cauhoi = dic["cauhoi"] as! String
-        self.tomtat = dic["tomtat"] as! String
+        if let id = dic["id"] as? Int {
+            self.id = id
+        }
+        if let idkhachhang = dic["idkhachhang"] as? Int {
+            self.idkhachhang = idkhachhang
+        }
+        if let sendmail = dic["sendmail"] as? Int {
+            self.sendmail = sendmail
+        }
+        if let trangthai = dic["trangthai"] as? Int {
+            self.trangthai = trangthai
+        }
+        if let ten = dic["ten"] as? String {
+            self.ten = ten
+        }
+        if let email = dic["email"] as? String {
+            self.email = email
+        }
+        if let dienthoai = dic["dienthoai"] as? String {
+            self.dienthoai = dienthoai
+        }
+        if let cauhoi = dic["cauhoi"] as? String {
+            self.cauhoi = cauhoi
+        }
         if let tt = dic["tomtat"] as? String {
             self.tomtat = tt
-        } else {
-            self.tomtat = ""
         }
         if let traloi = dic["cautraloi"] as? String {
             self.cautraloi = traloi
-        } else {
-            self.cautraloi = ""
         }
-        self.usertraloi = dic["usertraloi"] as! String
-        self.userxacnhan = dic["userxacnhan"] as! String
-        self.sendmail = dic["sendmail"] as! Int
-        self.trangthai = dic["trangthai"] as! Int
-        self.created_at = dic["created_at"] as! String
-        self.updated_at = dic["updated_at"] as! String
+        if let usertraloi = dic["usertraloi"] as? String {
+            self.usertraloi = usertraloi
+        }
+        if let userxacnhan = dic["userxacnhan"] as? String {
+            self.userxacnhan = userxacnhan
+        }
+        if let created_at = dic["created_at"] as? String {
+            self.created_at = created_at
+        }
+        if let updated_at = dic["updated_at"] as? String {
+            self.updated_at = updated_at
+        }
     }
 }
