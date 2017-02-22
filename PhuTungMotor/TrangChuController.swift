@@ -43,7 +43,7 @@ class TrangChuController: ProductController {
                             let sp = SanPham(sanpham: i)
                             arrTam.append(sp)
                             let j = arrTam.count - 1
-                            self.downloadImageSanPham(sp: sp, completion: { (arrImage) in
+                            self.downloadImageNoload(sp: sp, completion: { (arrImage) in
                                 self.arrSanPham[section][j].hinh = arrImage
                                 self.colSanPham.reloadItems(at: [IndexPath(row: j, section: section)])
                             })

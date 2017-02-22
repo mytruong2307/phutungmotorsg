@@ -259,8 +259,6 @@ class CellProduct: BaseCollectCell, UIScrollViewDelegate {
         scrImage.setContentOffset(CGPoint(x: x,y :0), animated: true)
     }
     
-    
-    
     override func setupData() {
         lblName.text = gioHang.sanpham.ten
         lblPrice.text = showVNCurrency(gia: gioHang.sanpham.gia)
@@ -274,6 +272,7 @@ class CellProduct: BaseCollectCell, UIScrollViewDelegate {
             act.removeFromSuperview()
             imgHinh.removeFromSuperview()
             setupScrImage()
-        } 
+        }
     }
+    
 }

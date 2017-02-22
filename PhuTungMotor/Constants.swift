@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.104"
+let ip = "192.168.1.102"
 let domain = "http://\(ip)/phutungmoto"
 class Constants {
     static let MY_TEXT_COLOR:UIColor = UIColor(colorLiteralRed: 0.83, green: 0.82, blue: 0.81, alpha: 1)
@@ -33,6 +33,8 @@ enum API:String {
     case SHOPPING = "dathang"
     case DONHANG = "donhang"
     case DONHANGSANPHAM = "donhangsanpham"
+    case UPDATEVIEW = "updateluotxem"
+    case SEARCH = "timkiemsanpham"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -143,6 +145,8 @@ enum UI:String {
     case LBL_LISTORDER = "DANH SÁCH ĐƠN HÀNG"
     case LBL_NHAN = "x"
     case LBL_BANG = "="
+    case LBL_KEYWORD = "Kết quả tìm"
+    case LBL_PRODUCT = "sản phẩm"
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -164,6 +168,8 @@ enum UI:String {
     case HOUR = "giờ trước"
     case MINUTE = "phút trước"
     case NOW = "Vừa xong"
+    
+    case SERBAR = "Tìm theo tên sản phẩm"
     
     func getText() -> String {
         return self.rawValue

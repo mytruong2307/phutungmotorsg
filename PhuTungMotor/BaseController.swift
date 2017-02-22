@@ -12,7 +12,7 @@ var kh:KhachHang?
 var gioHang:Array<GioHang> = []
 var thanhtoan:Int = -1
 
-class BaseController: UIViewController {
+class BaseController: UIViewController, UISearchBarDelegate {
     
     var arrMenu:Array<Array<String>> = []
     var arrIcon:Array<Array<UIImage>> = []
@@ -74,13 +74,23 @@ class BaseController: UIViewController {
         tbl.rowHeight = UITableViewAutomaticDimension
         return tbl
     }()
-    lazy var searchBar:UISearchBar = {
-        let v = UISearchBar(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
-        
+    
+    let searchBar:UISearchBar = {
+        let v = UISearchBar()
+        v.showsCancelButton = true
+        v.placeholder = getTextUI(ui: UI.SERBAR)
         return v
     }()
+    
     let uvCart:UIView = {
         let v = UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 30, height: 30)))
+        return v
+    }()
+    
+    let bn:UIImageView = {
+        let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 40))
+        v.image = #imageLiteral(resourceName: "banner")
+        v.contentMode = .scaleToFill
         return v
     }()
     
@@ -103,12 +113,10 @@ class BaseController: UIViewController {
             gioHang = gioHang.filter({ return $0.soluong > 0 })
             lblCart.text = String (gioHang.count)
         }
-        
+        setupDataMenu()
+        tbl.reloadData()
     }
     func setupNavigationBar() {
-        let bn = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 40))
-        bn.contentMode = UIViewContentMode.scaleAspectFit
-        bn.image = #imageLiteral(resourceName: "banner")
         self.navigationItem.titleView = bn
         //Gio hang
         uvCart.addViewFullScreen(views: imgCart)
@@ -153,7 +161,21 @@ class BaseController: UIViewController {
         
     }
     func search() {
-        showLog(mess: "Search")
+        navigationItem.titleView = searchBar
+        searchBar.delegate = self
+        navigationItem.leftBarButtonItems = []
+        navigationItem.rightBarButtonItems = []
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        navigationItem.titleView = bn
+        setupNavigationBar()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let scr = SearchController()
+        scr.keyword = searchBar.text!
+        navigationController?.pushViewController(scr, animated: true)
     }
     
     func setupDataMenu() {

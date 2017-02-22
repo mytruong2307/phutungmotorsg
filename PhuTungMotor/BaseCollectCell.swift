@@ -18,6 +18,7 @@ class BaseCollectCell: UICollectionViewCell {
     override func layoutSubviews() {
         setupData()
     }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

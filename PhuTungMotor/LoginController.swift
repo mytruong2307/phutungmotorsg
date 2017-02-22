@@ -121,6 +121,7 @@ class LoginController: BaseController {
                         if data?[getResultAPI(link: API.DATA_RES)] as! String == getResultAPI(link: API.RES_NOK) {
                             self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
                         } else {
+                            //Login OK
                             let dic = data?["data"] as! Dictionary<String,Any>
                             kh = KhachHang(khachhang: dic)
                             if self.remember {
@@ -128,13 +129,13 @@ class LoginController: BaseController {
                                 user.setValue(dic, forKey: "email")
                                 user.synchronize()
                             }
+                            
                             if self.shopping {
                                 //Dat hang thanh cong
                                 let scr = ShoppingController()
                                 self.navigationController?.pushViewController(scr, animated: true)
                             } else {
-                                let scr = TrangChuController()
-                                self.navigationController?.pushViewController(scr, animated: true)
+                                let _ = self.navigationController?.popToRootViewController(animated: true)
                             }
                         }
                     })

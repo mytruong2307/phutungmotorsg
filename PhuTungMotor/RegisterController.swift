@@ -325,7 +325,15 @@ class RegisterController: BaseController {
             }
             break
         case txtXeDangDung:
-            link = getLinkService(link: API.BIKETYPE)
+            link = ""
+            arrDuLieu.removeAll()
+            for i in arrLoaiXe
+            {
+                arrDuLieu.append(Address(loaixe: i))
+            }
+            tblMain.reloadData()
+            tblMain.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y - 201,  width: sender.frame.size.width, height: 200)
+            tblMain.isHidden = false
             break
         default:
             link = ""
@@ -336,13 +344,18 @@ class RegisterController: BaseController {
             showLog(mess: link)
             arrDuLieu.removeAll()
             getJson(link: link, completion: { (object) in
-                if let data = object as? Array<Dictionary<String, Any>> {
-                    for i in data
-                    {
-                        self.arrDuLieu.append(Address(address: i))
-                    }
-                    DispatchQueue.main.async {
-                        self.tblMain.reloadData()
+                if let dic = object as? Dictionary<String,Any> {
+                    let res = dic[getResultAPI(link: API.DATA_RES)] as? String
+                    if res == getResultAPI(link: API.RES_OK){
+                        if let data = dic[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String, Any>> {
+                            for i in data
+                            {
+                                self.arrDuLieu.append(Address(address: i))
+                            }
+                            DispatchQueue.main.async {
+                                self.tblMain.reloadData()
+                            }
+                        }
                     }
                 } else {
                     showLog(mess: CONSOLE.JSON)

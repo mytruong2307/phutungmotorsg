@@ -61,25 +61,32 @@ class ChiTietDHController: ProductController {
     
     var arrDonHang:Array<DonHang> = []
     var pos:Int = 0
-    var arrGioHang:Array<GioHang> = []
+    var arrSP:Array<GioHang> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         colSanPham.register(CellProduct.self, forCellWithReuseIdentifier: "CellProduct")
         colSanPham.delegate = self
         colSanPham.dataSource = self
+        colSanPham.allowsSelection = false
         downloadAllData()
     }
     
     func downloadAllData()  {
         for (index,dh) in arrDonHang.enumerated() {
-            let arrGH = dh.listSP
-            for (pos,sp) in arrGH.enumerated() {
-                if sp.sanpham.hinh.count == 0 {
-                    downloadImageSanPham(sp: sp.sanpham, completion: { (image) in
-                        self.arrDonHang[index].listSP[pos].sanpham.hinh = image
-                        showLog(mess: "Down xong anh cua SP: \(pos + 1) thuoc don hang :\(dh.id)")
-                    })
+            if index != pos {
+                let arrGH = dh.listSP
+                for (vitri,sp) in arrGH.enumerated() {
+                    if sp.sanpham.hinh.count == 0 {
+                        downloadImageSanPham(sp: sp.sanpham, completion: { (image) in
+                            self.arrDonHang[index].listSP[vitri].sanpham.hinh = image
+                            showLog(mess: "Down xong anh cua SP: \(vitri + 1) thuoc don hang :\(dh.id)")
+                            if index == self.pos {
+                                self.colSanPham.reloadItems(at: [IndexPath(item: vitri, section: 0)])
+                                showLog(mess: "Reload Item \(vitri)")
+                            }
+                        })
+                    }
                 }
             }
         }
@@ -130,7 +137,7 @@ class ChiTietDHController: ProductController {
         if pos < 0 {
             pos = arrDonHang.count - 1
         }
-        getData()
+        setupData()
     }
     
     func showDonHangSau()  {
@@ -138,16 +145,43 @@ class ChiTietDHController: ProductController {
         if pos >= arrDonHang.count {
             pos = 0
         }
-        getData()
+        setupData()
+    }
+    
+    func setupData() {
+        arrSP.removeAll()
+        arrSP = arrDonHang[pos].listSP
+        var sum:Double = 0
+        for gh in arrSP {
+            sum += gh.sanpham.gia * Double (gh.soluong)
+        }
+        lblDTongTien.text = showVNCurrency(gia: sum)
+        showLog(mess: pos)
+        showLog(mess: arrSP)
+        colSanPham.reloadData()
     }
     
     override func setupDataSanPham() {
-        getData()
+        arrSP = arrDonHang[pos].listSP
+        var sum:Double = 0
+        for (index,gh) in arrSP.enumerated() {
+            sum += gh.sanpham.gia * Double (gh.soluong)
+            if gh.sanpham.hinh.count == 0 {
+                downloadImageSanPham(sp: gh.sanpham, completion: { (image) in
+                    self.arrSP[index].sanpham.hinh = image
+                    self.colSanPham.reloadItems(at: [IndexPath(item: index, section: 0)])
+                    showLog(mess: "Load xong hinh san pham \(self.arrSP[index].sanpham.ten)")
+                    self.arrDonHang[self.pos].listSP[index] = self.arrSP[index]
+                })
+            }
+        }
+        lblDTongTien.text = showVNCurrency(gia: sum)
+        showLog(mess: arrSP)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == colSanPham {
-            return arrGioHang.count
+            return arrSP.count
         } else {
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
@@ -156,7 +190,7 @@ class ChiTietDHController: ProductController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == colSanPham {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellProduct", for: indexPath) as! CellProduct
-            cell.gioHang = arrGioHang[indexPath.row]
+            cell.gioHang = arrSP[indexPath.row]
             cell.pos = indexPath.row
             return cell
         } else {
@@ -188,26 +222,4 @@ class ChiTietDHController: ProductController {
         }
     }
     
-    func getData() {
-        arrGioHang.removeAll()
-        arrGioHang = arrDonHang[pos].listSP
-        var sum:Double = 0
-        for (index,gh) in arrGioHang.enumerated() {
-            sum += gh.sanpham.gia * Double (gh.soluong)
-            if gh.sanpham.hinh.count == 0 {
-                downloadImageSanPham(sp: gh.sanpham, completion: { (image) in
-                    self.arrGioHang[index].sanpham.hinh = image
-                    self.colSanPham.reloadItems(at: [IndexPath(item: index, section: 0)])
-                    showLog(mess: "Load xong hinh san pham \(self.arrGioHang[index].sanpham.ten)")
-                    self.arrDonHang[self.pos].listSP[index] = self.arrGioHang[index]
-                })
-            }
-        }
-        lblDTongTien.text = showVNCurrency(gia: sum)
-        showLog(mess: arrGioHang)
-        DispatchQueue.main.async {
-            self.colSanPham.reloadData()
-        }
-        
-    }
 }

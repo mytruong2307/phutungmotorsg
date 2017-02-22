@@ -16,4 +16,9 @@ struct Address {
         self.ten = address["ten"] as! String
         self.id = address["id"] as! Int
     }
+    
+    init(loaixe:LoaiXe) {
+        self.ten = loaixe.ten
+        self.id = loaixe.id
+    }
 }

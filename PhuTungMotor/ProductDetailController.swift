@@ -14,6 +14,7 @@ class ProductDetailController: ProductController {
     var arrSanPham:Array<SanPham> = []
     var pos:Int = 0
     var width:CGFloat = 0
+    var arrView:Array<Int> = []
     
     let page:UIPageControl = {
         let v = UIPageControl()
@@ -134,11 +135,12 @@ class ProductDetailController: ProductController {
         super.viewDidLoad()
         btnShoppingCart.setTitle(getTextUI(ui: UI.BTN_CART), for: UIControlState.normal)
         scrImage.delegate = self
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        arrView.append(pos)
+        updateViewDB()
         width = vBackground.frame.width
         setupData()
         scrImage.addSubview(self.page)
@@ -218,7 +220,7 @@ class ProductDetailController: ProductController {
             //Animation
             animationCart(completed: {
                 gioHang.append(GioHang(sanpham: self.arrSanPham[self.pos], soluong: 1 ))
-                let _ = self.navigationController?.popToRootViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             })
         } else {
             for (index,gh) in gioHang.enumerated() {
@@ -236,7 +238,7 @@ class ProductDetailController: ProductController {
             if !check {
                 animationCart(completed: {
                     gioHang.append(GioHang(sanpham: self.arrSanPham[self.pos], soluong: 1 ))
-                    let _ = self.navigationController?.popToRootViewController(animated: true)
+                    let _ = self.navigationController?.popViewController(animated: true)
                 })
             }
             
@@ -261,6 +263,10 @@ class ProductDetailController: ProductController {
             } else {
                 setupScrImage()
             }
+        }
+        if !arrView.contains(pos) {
+            arrView.append(pos)
+            updateViewDB()
         }
     }
     
@@ -319,7 +325,7 @@ class ProductDetailController: ProductController {
         if pos >= arrSanPham.count {
             pos = 0
         }
-        setupData()
+        setupData()       
     }
     func previousSanPham() {
         pos -= 1
@@ -364,6 +370,11 @@ class ProductDetailController: ProductController {
         })
     }
     
+    func updateViewDB()  {
+        sendRequestNoLoading(linkAPI: API.UPDATEVIEW, param: nil, method: Method.get, extraLink: "\(arrSanPham[pos].id)") { (object) in
+            showLog(mess: object!)
+        }
+    }
     func animtionBuyProduct(completed:@escaping () -> ())  {
         let imgTran:UIImageView = UIImageView()
         imgTran.contentMode = .scaleToFill

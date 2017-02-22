@@ -180,31 +180,99 @@ extension UIViewController
     }
     
     func downloadImageSanPham(sp:SanPham, completion:@escaping (Array<UIImage>)->()) {
+        // hien bieu tuong load khi gui
+        let viewTam:UIView = {
+            let v = UIView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        
+        view.addSubview(viewTam)
+        view.addViewFullScreen(views: viewTam)
+        //Hinh nen
+        let img:UIImageView = UIImageView()
+        viewTam.addViewFullScreen(views: img)
+        img.image = #imageLiteral(resourceName: "bg4")
+        
+        //Visual Effect
+        let blurEffect = UIBlurEffect(style: .light)
+        let vis:UIVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        viewTam.addViewFullScreen(views: vis)
+        
+        let act:UIActivityIndicatorView = {
+            let v = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+            v.color = #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1)
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        viewTam.addSubview(act)
+        act.centerXAnchor.constraint(equalTo: viewTam.centerXAnchor).isActive = true
+        act.centerYAnchor.constraint(equalTo: viewTam.centerYAnchor).isActive = true
+        act.startAnimating()
+        
+        sendRequestThread(linkAPI: API.IMAGE, param: nil, method: Method.get, extraLink: "\(sp.id)") { (object) in
+            if object != nil {
+                if let res = object?[getResultAPI(link: API.DATA_RES)] as? String {
+                    if res == getResultAPI(link: API.RES_OK) {
+                        if let data = object?["data"] as? Array<Dictionary<String,Any>> {
+                            var arr:Array<UIImage> = []
+                            for i in data {
+                                if let hinh = i["ten"] as? String {
+                                    let link:String = getLinkImage(link: API.PRODUCT) + "/" + hinh
+                                    self.getImageThread(link: link, completion: { (image) in
+                                        arr.append(image)
+                                        if arr.count == data.count {
+                                            DispatchQueue.main.async {
+                                                act.stopAnimating()
+                                                act.hidesWhenStopped = true
+                                                viewTam.removeFromSuperview()
+                                                self.view.layoutIfNeeded()
+                                                completion(arr)
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            act.stopAnimating()
+                            act.hidesWhenStopped = true
+                            viewTam.removeFromSuperview()
+                            self.view.layoutIfNeeded()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func downloadImageNoload(sp:SanPham, completion:@escaping (Array<UIImage>)->()) {
         sendRequestNoLoading(linkAPI: API.IMAGE, param: nil, method: Method.get, extraLink: "\(sp.id)") { (object) in
             if object != nil {
-            if let res = object?[getResultAPI(link: API.DATA_RES)] as? String {
-                if res == getResultAPI(link: API.RES_OK) {
-                    if let data = object?["data"] as? Array<Dictionary<String,Any>> {
-                        var arr:Array<UIImage> = []
-                        for i in data {
-                            if let hinh = i["ten"] as? String {
-                                let link:String = getLinkImage(link: API.PRODUCT) + "/" + hinh
-                                self.getImageFromLink(link: link, completion: { (image) in
-                                    arr.append(image)
-                                    if arr.count == data.count {
-                                        completion(arr)
-                                    }
-                                })
+                if let res = object?[getResultAPI(link: API.DATA_RES)] as? String {
+                    if res == getResultAPI(link: API.RES_OK) {
+                        if let data = object?["data"] as? Array<Dictionary<String,Any>> {
+                            var arr:Array<UIImage> = []
+                            for i in data {
+                                if let hinh = i["ten"] as? String {
+                                    let link:String = getLinkImage(link: API.PRODUCT) + "/" + hinh
+                                    self.getImageThread(link: link, completion: { (image) in
+                                        arr.append(image)
+                                        if arr.count == data.count {
+                                            DispatchQueue.main.async {
+                                                completion(arr)
+                                            }
+                                        }
+                                    })
+                                }
                             }
                         }
                     }
                 }
             }
-            }
         }
-        
     }
-    
     
     func isEmptyTextField(txt:UITextField ...) -> String
     {
@@ -324,8 +392,24 @@ extension UIViewController
             }
             
         }
+    }
+    
+    func getImageThread(link:String, completion: @escaping (UIImage)->()) {
+        let queue = DispatchQueue(label: "loadhinh")
+        queue.async {
+            let url = URL(string: link)
+            do {
+                let data = try Data(contentsOf: url!)
+                completion(UIImage(data: data)!)
+                
+            } catch {
+                showLog(mess: "Loi load hinh: \(link)")
+            }
+            
+        }
         
     }
+
     
     func sendRequestToServer(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
         // hien bieu tuong load khi gui
@@ -446,26 +530,126 @@ extension UIViewController
             }
             }.resume()
     }
-}
-
-public extension UIWindow {
-    public var visibleViewController: UIViewController? {
-        return UIWindow.getVisibleViewControllerFrom(vc: self.rootViewController)
-    }
     
-    public static func getVisibleViewControllerFrom(vc: UIViewController?) -> UIViewController? {
-        if let nc = vc as? UINavigationController {
-            return UIWindow.getVisibleViewControllerFrom(vc: nc.visibleViewController)
-        } else if let tc = vc as? UITabBarController {
-            return UIWindow.getVisibleViewControllerFrom(vc: tc.selectedViewController)
-        } else {
-            if let pvc = vc?.presentedViewController {
-                return UIWindow.getVisibleViewControllerFrom(vc: pvc)
-            } else {
-                return vc
+    func sendRequestThread(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
+        // hien bieu tuong load khi gui
+        let viewTam:UIView = {
+            let v = UIView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        
+        view.addSubview(viewTam)
+        view.addViewFullScreen(views: viewTam)
+        //Hinh nen
+        let img:UIImageView = UIImageView()
+        viewTam.addViewFullScreen(views: img)
+        img.image = #imageLiteral(resourceName: "bg4")
+        
+        //Visual Effect
+        let blurEffect = UIBlurEffect(style: .light)
+        let vis:UIVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        viewTam.addViewFullScreen(views: vis)
+        
+        let act:UIActivityIndicatorView = {
+            let v = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+            v.color = #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1)
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        viewTam.addSubview(act)
+        act.centerXAnchor.constraint(equalTo: viewTam.centerXAnchor).isActive = true
+        act.centerYAnchor.constraint(equalTo: viewTam.centerYAnchor).isActive = true
+        act.startAnimating()
+        
+        var link = linkAPI.LINK_SERVICE
+        if method == .get {
+            if param != nil {
+                link = link + "?" + (param?.convertToString())!
             }
         }
+        if extraLink != nil {
+            link = link + "/" + extraLink! // For Laravel
+        }
+        showLog(mess: link)
+        let url = URL(string: link)
+        var request = URLRequest(url:url!)
+        if method == .post {
+            let boundary = generateBoundaryString()
+            let body = NSMutableData()
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            for pr in param!{
+                if let image:UIImage = pr.value as? UIImage
+                {
+                    let data = UIImageJPEGRepresentation(image, 0.5)
+                    let fname:String = "\(getTime()).jpg"
+                    let mimetype = "image/png"
+                    body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Disposition:form-data; name=\"\(pr.key)\"; FileName=\"\(fname)\"\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Type: \(mimetype)\r\n\r\n".data(using: String.Encoding.utf8)!)
+                    body.append(data!)
+                    body.append("\r\n".data(using: String.Encoding.utf8)!)
+                }else{
+                    //----------upload them param
+                    body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("Content-Disposition: form-data; name=\"\(pr.key)\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+                    body.append("\(pr.value)\r\n".data(using: String.Encoding.utf8)!)
+                }
+                //    body.append("&ten=datnguyen".data(using: String.Encoding.utf8)!)
+                request.httpMethod = "POST"
+                request.httpBody = body as Data
+            }
+        }
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, res, err) in
+            if err == nil {
+                do {
+                    showLog(mess: data!)
+                    let data = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    if let object = data as? Dictionary<String,Any> {
+                        completion(object)
+                        DispatchQueue.main.async {
+                            act.stopAnimating()
+                            act.hidesWhenStopped = true
+                            viewTam.removeFromSuperview()
+                            self.view.layoutIfNeeded()
+                        }
+                    } else {
+                        printConsole(csl: CONSOLE.DICTIONARY)
+                        completion(nil)
+                        DispatchQueue.main.async {
+                            act.stopAnimating()
+                            act.hidesWhenStopped = true
+                            viewTam.removeFromSuperview()
+                            self.view.layoutIfNeeded()
+                            showLog(mess: link)
+                        }
+                    }
+                } catch{
+                    printConsole(csl: CONSOLE.JSON)
+                    completion(nil)
+                    DispatchQueue.main.async {
+                        act.stopAnimating()
+                        act.hidesWhenStopped = true
+                        viewTam.removeFromSuperview()
+                        self.view.layoutIfNeeded()
+                        showLog(mess: link)
+                    }
+                }
+            } else {
+                printConsole(csl: CONSOLE.URLERROR)
+                completion(nil)
+                showLog(mess: link)
+                DispatchQueue.main.async {
+                    act.stopAnimating()
+                    act.hidesWhenStopped = true
+                    viewTam.removeFromSuperview()
+                    self.view.layoutIfNeeded()
+                }
+            }
+        }.resume()
     }
+
 }
 
 func sendRequestNoLoading(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {

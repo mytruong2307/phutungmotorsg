@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0D4CF643F1CEBDD5EDC7E399 /* Pods_PhuTungMotor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 236C21CB9223DBA7315C97A2 /* Pods_PhuTungMotor.framework */; };
+		8441CE271E5DB81C00B95A39 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8441CE261E5DB81C00B95A39 /* SearchController.swift */; };
 		8447F7721E4DB2C900B21A19 /* TrangChuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8447F7711E4DB2C900B21A19 /* TrangChuController.swift */; };
 		846AEF081E5B2D48000805C9 /* DonHangController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846AEF071E5B2D48000805C9 /* DonHangController.swift */; };
 		846AEF0A1E5B2DFE000805C9 /* DonHang.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846AEF091E5B2DFE000805C9 /* DonHang.swift */; };
@@ -64,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		236C21CB9223DBA7315C97A2 /* Pods_PhuTungMotor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhuTungMotor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8441CE261E5DB81C00B95A39 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		8447F7711E4DB2C900B21A19 /* TrangChuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrangChuController.swift; sourceTree = "<group>"; };
 		846AEF071E5B2D48000805C9 /* DonHangController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonHangController.swift; sourceTree = "<group>"; };
 		846AEF091E5B2DFE000805C9 /* DonHang.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonHang.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				847640441E58573B0053EA9C /* ShoppingController.swift */,
 				846AEF071E5B2D48000805C9 /* DonHangController.swift */,
 				847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */,
+				8441CE261E5DB81C00B95A39 /* SearchController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -432,6 +435,7 @@
 				8478A07F1E1F8B72001919E8 /* HoiDapController.swift in Sources */,
 				8492EFB91E0CD981005D58D4 /* Extension.swift in Sources */,
 				8492EFCB1E0CDAC5005D58D4 /* UpdateInfoController.swift in Sources */,
+				8441CE271E5DB81C00B95A39 /* SearchController.swift in Sources */,
 				84A9969D1E4D5DE500FBFE86 /* ProductController.swift in Sources */,
 				84FAEEEE1E0CD22400745B1D /* AppDelegate.swift in Sources */,
 				8487274A1E1A8C3F008D3F0E /* TinTucController.swift in Sources */,

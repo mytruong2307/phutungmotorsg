@@ -111,6 +111,7 @@ class ChangePassController: BaseController {
                                 self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
                             } else {
                                 self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHANGEPASSOK), complete: {
+                                    showLog(mess: kh!)
                                     _ = self.navigationController?.popToRootViewController(animated: true)
                                 })
                             }
