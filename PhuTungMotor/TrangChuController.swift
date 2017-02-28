@@ -46,9 +46,11 @@ class TrangChuController: ProductController {
                             self.downloadImageNoload(sp: sp, completion: { (arrImage) in
                                 self.arrSanPham[section][j].hinh = arrImage
                                 self.colSanPham.reloadItems(at: [IndexPath(row: j, section: section)])
+                                showLog(mess: self.arrSanPham[section][j])
                             })
                         }
                         self.arrSanPham.append(arrTam)
+                        showLog(mess: arrTam)
                         self.colSanPham.reloadData()
                     }
                 } else {

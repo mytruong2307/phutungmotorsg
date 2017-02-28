@@ -42,7 +42,7 @@ class LoaiXeController: ProductController {
                         let sp:SanPham = SanPham(sanpham: i)
                         self.arrSanPham.append(sp)
                         let j = self.arrSanPham.count - 1
-                        self.downloadImageSanPham(sp: sp, completion: { (arrImage) in
+                        self.downloadImageNoload(sp: sp, completion: { (arrImage) in
                             self.arrSanPham[j].hinh = arrImage
                             self.colSanPham.reloadItems(at: [IndexPath(item: j, section: 0)])
                         })

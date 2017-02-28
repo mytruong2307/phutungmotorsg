@@ -11,6 +11,7 @@ import UIKit
 var kh:KhachHang?
 var gioHang:Array<GioHang> = []
 var thanhtoan:Int = -1
+var paramAdmin = Dictionary<String,String>()
 
 class BaseController: UIViewController, UISearchBarDelegate {
     
@@ -98,7 +99,6 @@ class BaseController: UIViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupNavigationBar()
         setupDataMenu()
         setupMenu()
@@ -115,6 +115,11 @@ class BaseController: UIViewController, UISearchBarDelegate {
         }
         setupDataMenu()
         tbl.reloadData()
+        UIView.animate(withDuration: 0.5) { 
+            self.navigationController?.navigationBar.layer.transform = CATransform3DIdentity
+            self.uvMain.layer.transform = CATransform3DIdentity
+        }
+        showLog(mess: paramAdmin)
     }
     func setupNavigationBar() {
         self.navigationItem.titleView = bn
@@ -188,7 +193,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
             arrIcon = [[#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "login")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq")]]
         } else {
             arrMenu = [["Đăng xuất","Đổi mật khẩu","Cập nhật thông tin"],["Trang chủ","Tin tức","Hỏi đáp","Đơn hàng"]]
-            arrIcon = [[#imageLiteral(resourceName: "Logout"),#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "Contacts")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq"),#imageLiteral(resourceName: "cart"),#imageLiteral(resourceName: "List")]]
+            arrIcon = [[#imageLiteral(resourceName: "Logout"),#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "Contacts")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq"),#imageLiteral(resourceName: "List")]]
         }
     }
     

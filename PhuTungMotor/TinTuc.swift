@@ -37,9 +37,18 @@ struct TinTuc {
         if let id = dic["id"] as? Int {
             self.id = id
         }
-        if let noibat = dic["noibat"] as? Int {
+
+        //chay local
+//        if let noibat = dic["noibat"] as? Int {
+//            self.noibat = noibat
+//        }
+        
+        //chay host
+        if let noibat = (dic["noibat"] as? NSString)?.integerValue {
             self.noibat = noibat
         }
+        
+        
         if let tieude = dic["tieude"] as? String {
             self.tieude = tieude
         }

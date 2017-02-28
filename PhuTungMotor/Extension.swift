@@ -137,6 +137,14 @@ extension String {
 
 extension UIViewController
 {
+    func popToAdminController() {
+        for viewController in (self.navigationController?.viewControllers)! {
+            if viewController .isKind(of: AdminController.self) {
+                let _ = self.navigationController?.popToViewController(viewController, animated: true)
+            }
+        }
+    }
+    
     func showAlert(title:String, mess:String) {
         let alert:UIAlertController = UIAlertController(title: title, message: mess, preferredStyle: .alert)
         let btnOK:UIAlertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -409,7 +417,6 @@ extension UIViewController
         }
         
     }
-
     
     func sendRequestToServer(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
         // hien bieu tuong load khi gui
@@ -530,6 +537,152 @@ extension UIViewController
             }
             }.resume()
     }
+    
+    func sendRequestAdmin(linkAPI:API, param:Dictionary<String,Any>? = paramAdmin, method:Method = .post, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
+        
+        var link = linkAPI.LINK_ADMIN
+        if extraLink != nil {
+            link = link + "/" + extraLink! // For Laravel
+        }
+        showLog(mess: link)
+        let url = URL(string: link)
+        var request = URLRequest(url:url!)
+        if method == .post {
+            
+            request.httpMethod = method.toString
+            let data = param?.convertToString().data(using: String.Encoding.utf8)
+            request.httpBody = data
+        }
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, res, err) in
+            if err == nil {
+                do {
+                    showLog(mess: data!)
+                    let object = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    if let data = object as? Dictionary<String,Any> {
+                        DispatchQueue.main.async {
+                            
+                            let res = data[getResultAPI(link: API.DATA_RES)] as! String
+                            if res == getResultAPI(link: API.RES_OK) {
+                                let nv = data["nv"] as! Dictionary<String,String>
+                                let email = nv["email"]
+                                if email == kh?.email {
+                                    paramAdmin["token"] = nv["maxacnhan"]
+                                    if paramAdmin["newToken"] == "1" {
+                                        paramAdmin["newToken"] = "0"
+                                    }
+                                    completion(data)
+                                } else {
+                                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.DIFERRENTUSER), complete: {
+                                        let _ = self.navigationController?.popToRootViewController(animated: true)
+                                    })
+                                    
+                                }
+                            } else {
+                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.NOPERMISSION), complete: {
+                                    let _ = self.navigationController?.popToRootViewController(animated: true)
+                                })
+                            }
+                        }
+                    } else {
+                        printConsole(csl: CONSOLE.DICTIONARY)
+                        showLog(mess: link)
+                        DispatchQueue.main.async {
+                            completion(nil)
+                        }
+                    }
+                } catch{
+                    showLog(mess: link)
+                    printConsole(csl: CONSOLE.JSON)
+                    DispatchQueue.main.async {
+                        showLog(mess: link)
+                        completion(nil)
+                    }
+                }
+            } else {
+                printConsole(csl: CONSOLE.URLERROR)
+                DispatchQueue.main.async {
+                    showLog(mess: link)
+                    completion(nil)
+                }
+                
+            }
+            }.resume()
+    }
+    
+    func sendRequestAdmin(linkAPI:String, param:Dictionary<String,Any>? = paramAdmin, method:Method = .post, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
+        
+        var link = linkAPI
+        if extraLink != nil {
+            link = link + "/" + extraLink! // For Laravel
+        }
+        showLog(mess: link)
+        let url = URL(string: link)
+        var request = URLRequest(url:url!)
+        if method == .post {
+            
+            request.httpMethod = method.toString
+            let data = param?.convertToString().data(using: String.Encoding.utf8)
+            request.httpBody = data
+        }
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, res, err) in
+            if err == nil {
+                do {
+                    showLog(mess: data!)
+                    let object = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    if let data = object as? Dictionary<String,Any> {
+                        DispatchQueue.main.async {
+                            
+                            let res = data[getResultAPI(link: API.DATA_RES)] as! String
+                            if res == getResultAPI(link: API.RES_OK) {
+                                let nv = data["nv"] as! Dictionary<String,String>
+                                let email = nv["email"]
+                                if email == kh?.email {
+                                    paramAdmin["token"] = nv["maxacnhan"]
+                                    if paramAdmin["newToken"] == "1" {
+                                        paramAdmin["newToken"] = "0"
+                                    }
+                                    showLog(mess: paramAdmin)
+                                    completion(data)
+                                } else {
+                                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.DIFERRENTUSER), complete: {
+                                        let _ = self.navigationController?.popToRootViewController(animated: true)
+                                    })
+                                    
+                                }
+                            } else {
+                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.NOPERMISSION), complete: {
+                                    let _ = self.navigationController?.popToRootViewController(animated: true)
+                                })
+                            }
+                        }
+                    } else {
+                        printConsole(csl: CONSOLE.DICTIONARY)
+                        showLog(mess: link)
+                        DispatchQueue.main.async {
+                            completion(nil)
+                        }
+                    }
+                } catch{
+                    showLog(mess: link)
+                    printConsole(csl: CONSOLE.JSON)
+                    DispatchQueue.main.async {
+                        showLog(mess: link)
+                        completion(nil)
+                    }
+                }
+            } else {
+                printConsole(csl: CONSOLE.URLERROR)
+                DispatchQueue.main.async {
+                    showLog(mess: link)
+                    completion(nil)
+                }
+                
+            }
+            }.resume()
+    }
+
     
     func sendRequestThread(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
         // hien bieu tuong load khi gui
@@ -708,7 +861,62 @@ func sendRequestNoLoading(linkAPI:API, param:Dictionary<String,Any>? = nil, meth
         }.resume()
 }
 
+
+
+func sendRequestNoLoading(linkurl:String, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
+    
+    var link = linkurl
+    if extraLink != nil {
+        link = link + "/" + extraLink! // For Laravel
+    }
+    showLog(mess: link)
+    let url = URL(string: link)
+    var request = URLRequest(url:url!)
+    if method == .post {
+        
+        request.httpMethod = method.toString
+        let data = param?.convertToString().data(using: String.Encoding.utf8)
+        request.httpBody = data
+    }
+    let session = URLSession.shared
+    session.dataTask(with: request) { (data, res, err) in
+        if err == nil {
+            do {
+                showLog(mess: data!)
+                let data = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                if let object = data as? Dictionary<String,Any> {
+                    DispatchQueue.main.async {
+                        completion(object)
+                    }
+                } else {
+                    printConsole(csl: CONSOLE.DICTIONARY)
+                    showLog(mess: link)
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
+                }
+            } catch{
+                showLog(mess: link)
+                printConsole(csl: CONSOLE.JSON)
+                DispatchQueue.main.async {
+                    showLog(mess: link)
+                    completion(nil)
+                }
+            }
+        } else {
+            printConsole(csl: CONSOLE.URLERROR)
+            DispatchQueue.main.async {
+                showLog(mess: link)
+                completion(nil)
+            }
+            
+        }
+        }.resume()
+}
+
+
 func getJson(link:String, completion:@escaping (Any?)->()) {
+    showLog(mess: link)
     let url = URL(string: link)
     let request = URLRequest(url:url!)
     let session = URLSession.shared
@@ -807,6 +1015,10 @@ func getTextUI(ui:UI) -> String {
 }
 func getLinkService(link:API) -> String {
     return link.getLinkService()
+}
+
+func getLinkAdminSer(link:API) -> String {
+    return link.getLinkAdminSer()
 }
 
 func getLinkImage(link:API) -> String {

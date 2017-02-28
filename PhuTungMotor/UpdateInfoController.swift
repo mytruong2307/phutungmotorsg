@@ -144,7 +144,7 @@ class UpdateInfoController: BaseController {
         
         //Add Ten
         let lblTen = MyLabel()
-        lblTen.text = "Họ và Tên"
+        lblTen.text = getTextUI(ui: UI.LBL_NAME)
         arrView.append(lblTen)
         
         txtTen = MyTextField()

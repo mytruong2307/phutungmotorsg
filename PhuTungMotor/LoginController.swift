@@ -21,7 +21,7 @@ class LoginController: BaseController {
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
-
+    
     let btnRegister:MyButton = {
         let v = MyButton()
         return v
@@ -38,13 +38,13 @@ class LoginController: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupFormLogin()
-
+        
     }
     
     override func addHomeIcon() {
         //Huy home menu
     }
-
+    
     func setupFormLogin() {
         //Danh sach ca view de autolayout code tay
         var arrView:Array<UIView> = []
@@ -101,7 +101,7 @@ class LoginController: BaseController {
         btnLogin.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         btnRegister.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         btnForgot.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
-
+        
     }
     
     func ghiNhoLogin(_ sender:UISwitch) {
@@ -125,6 +125,10 @@ class LoginController: BaseController {
                                 //Login OK
                                 let dic = data?["data"] as! Dictionary<String,Any>
                                 kh = KhachHang(khachhang: dic)
+                                if let token = data?["token"] as? String {
+                                    paramAdmin["token"] = token
+                                    paramAdmin["newToken"] = "0"
+                                }
                                 
                                 if self.remember {
                                     let user = UserDefaults()
@@ -134,15 +138,14 @@ class LoginController: BaseController {
                                 if let quyen = data?["quyen"] as? Array<String> {
                                     kh?.quyen = quyen
                                     self.showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.ADMIN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: {
-                                        showLog(mess: "Vao trang nhan vien:")
-                                        showLog(mess: quyen)
+                                        self.navigationController?.pushViewController(AdminController(), animated: true)
                                     }, actionB: {
                                         self.changePageKhachHang()
                                     })
                                 } else {
                                     self.changePageKhachHang()
                                 }
-
+                                
                             }
                         }
                     })

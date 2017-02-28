@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.102"
-let domain = "http://\(ip)/phutungmoto"
+let ip = "192.168.1.101"
+let domain = "http://phutungmotorsg.pe.hu"
+//let domain = "http://\(ip)/phutungmoto"
 class Constants {
     static let MY_TEXT_COLOR:UIColor = UIColor(colorLiteralRed: 0.83, green: 0.82, blue: 0.81, alpha: 1)
     static let MY_BG_COLOR:UIColor = UIColor(colorLiteralRed: 0.49, green: 0, blue: 0.01, alpha: 1)
@@ -35,6 +36,11 @@ enum API:String {
     case DONHANGSANPHAM = "donhangsanpham"
     case UPDATEVIEW = "updateluotxem"
     case SEARCH = "timkiemsanpham"
+    case SODONHANG = "sodonhang"
+    case SOHOIDAP = "sohoidap"
+    case DOANHTHU = "doanhthu"
+    case THONGTIN = "thongtin"
+    case SUATHONGTIN = "suathongtin"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -45,6 +51,10 @@ enum API:String {
     func getLinkService() ->String {
         return "\(domain)/service/" + self.rawValue
     }
+    
+    func getLinkAdminSer() -> String {
+        return "\(domain)/service/admin/" + self.rawValue
+    }
     func getLinkImage() -> String {
         return "\(domain)/images/" + self.rawValue
     }
@@ -54,6 +64,9 @@ enum API:String {
     
     var LINK_SERVICE:String {
         return "\(domain)/service/" + self.rawValue
+    }
+    var LINK_ADMIN:String {
+        return "\(domain)/service/admin/" + self.rawValue
     }
 
 }
@@ -93,6 +106,8 @@ enum ALERT:String {
     case KHACHHANG = "Khách hàng"
     case ADMIN = "Quản trị"
     case CHONTRANG = "Bạn chọn vào trang nào?"
+    case NOPERMISSION = "Bạn không có quyền vào mục này"
+    case DIFERRENTUSER = "User không hợp lệ"
     
     func getAlertMessage() -> String{
         return self.rawValue
@@ -118,6 +133,7 @@ enum UI:String {
     case LBL_DISTRICT = "Quận/Huyện"
     case LBL_WARD = "Phường/Xã"
     case LBL_ADDRESS = "Số nhà"
+    case LBL_DIACHI = "Địa chỉ:"
     case LBL_PHONE = "Điện thoại"
     case LBL_MALE = "Nam"
     case LBL_FEMALE = "Nữ"
@@ -150,6 +166,9 @@ enum UI:String {
     case LBL_BANG = "="
     case LBL_KEYWORD = "Kết quả tìm"
     case LBL_PRODUCT = "sản phẩm"
+    case LBL_PERMISSION = "DANH SÁCH QUYỀN"
+    case LBL_WEB = "Web:"
+
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
