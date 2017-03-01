@@ -64,18 +64,17 @@ class UpdateInfoController: BaseController {
         NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
-        let param = ["tenTinh":kh!.tinh, "tenQuan":kh!.quan]
-        loadJson(linkAPI: API.ADDRESS, param: param, method: Method.post) { (object) in
-            if let data = object as? Dictionary<String,Any> {
-                if data[getResultAPI(link: API.DATA_RES)] as! String == getResultAPI(link: API.RES_OK) {
-                    self.idTinh = data["tinh"] as! Int
-                    self.idQuan = data["quan"] as! Int
-                }
-            } else {
-                showLog(mess: CONSOLE.JSON)
+
+        var param = Dictionary<String,String>()
+        param["tenTinh"] = kh!.tinh
+        param["tenQuan"] = kh!.quan
+        sendRequestNoLoading(linkAPI: API.ADDRESS, param: param, method: Method.post, extraLink: nil) { (data) in
+            if data?[getResultAPI(link: API.DATA_RES)] as! String == getResultAPI(link: API.RES_OK) {
+                self.idTinh = data?["tinh"] as! Int
+                self.idQuan = data?["quan"] as! Int
             }
         }
-        
+                
         setupFormUpdate()
         
         txtTam = MyTextField()
@@ -316,7 +315,15 @@ class UpdateInfoController: BaseController {
             }
             break
         case txtXeDangDung:
-            link = getLinkService(link: API.BIKETYPE)
+            link = ""
+            arrDuLieu.removeAll()
+            for i in arrLoaiXe
+            {
+                arrDuLieu.append(Address(loaixe: i))
+            }
+            tblMain.reloadData()
+            tblMain.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y - 201,  width: sender.frame.size.width, height: 200)
+            tblMain.isHidden = false
             break
         default:
             link = ""
@@ -327,13 +334,18 @@ class UpdateInfoController: BaseController {
             showLog(mess: link)
             arrDuLieu.removeAll()
             getJson(link: link, completion: { (object) in
-                if let data = object as? Array<Dictionary<String, Any>> {
-                    for i in data
-                    {
-                        self.arrDuLieu.append(Address(address: i))
-                    }
-                    DispatchQueue.main.async {
-                        self.tblMain.reloadData()
+                if let dic = object as? Dictionary<String,Any> {
+                    let res = dic[getResultAPI(link: API.DATA_RES)] as? String
+                    if res == getResultAPI(link: API.RES_OK){
+                        if let data = dic[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String, Any>> {
+                            for i in data
+                            {
+                                self.arrDuLieu.append(Address(address: i))
+                            }
+                            DispatchQueue.main.async {
+                                self.tblMain.reloadData()
+                            }
+                        }
                     }
                 } else {
                     showLog(mess: CONSOLE.JSON)
