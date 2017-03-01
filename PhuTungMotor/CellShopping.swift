@@ -96,6 +96,7 @@ class CellShopping: BaseCollectCell {
         
     }
     override func setupData() {
+        showLog(mess: "ten sp:" + gh.sanpham.ten)
         imgHinh.image = gh.sanpham.hinh[0]
         lblName.text = gh.sanpham.ten
         lblCode.text = gh.sanpham.code
@@ -110,9 +111,11 @@ class CellShopping: BaseCollectCell {
         btnChinh.addTarget(self, action: #selector(CellShopping.chinhGioHang), for: UIControlEvents.touchUpInside)
         let thanhtien = gh.sanpham.gia * Double (gh.soluong)
         lblThanhTien.text = showVNCurrency(gia: thanhtien)
+        btnChinh.becomeFirstResponder()
     }
     
     func chinhGioHang()  {
+        btnChinh.becomeFirstResponder()
         if let soluong = Int (txtSoLuong.text!) {
             gh.soluong = soluong
         } else {

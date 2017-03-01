@@ -10,9 +10,11 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.101"
-let domain = "http://phutungmotorsg.pe.hu"
-//let domain = "http://\(ip)/phutungmoto"
+let ip = "192.168.1.104"
+let domain = "http://\(ip)/phutungmoto"
+//let ip = ""
+//let domain = "http://phutungmotorsg.pe.hu"
+
 class Constants {
     static let MY_TEXT_COLOR:UIColor = UIColor(colorLiteralRed: 0.83, green: 0.82, blue: 0.81, alpha: 1)
     static let MY_BG_COLOR:UIColor = UIColor(colorLiteralRed: 0.49, green: 0, blue: 0.01, alpha: 1)
@@ -144,7 +146,7 @@ enum UI:String {
     case LBL_PRODUCTPRICE = "Giá: "
     case LBL_PRODUCTBASEPRICE = "Giá cũ: "
     case LBL_PRODUCTTRADEMARK = "Hãng xe: "
-    case LBL_SUM = "TỔNG"
+    case LBL_SUM = "TỔNG : "
     case LBL_SHOPPINGCART = "GIỎ HÀNG"
     case LBL_DONHANGNO = "ĐƠN HÀNG SỐ: "
     case LBL_CREATEDAT = "Ngày đặt:"

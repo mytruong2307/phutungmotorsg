@@ -372,6 +372,8 @@ class ProductDetailController: ProductController {
     
     func updateViewDB()  {
         sendRequestNoLoading(linkAPI: API.UPDATEVIEW, param: nil, method: Method.get, extraLink: "\(arrSanPham[pos].id)") { (object) in
+            showLog(mess: self.pos)
+            showLog(mess: self.arrSanPham.count)
             showLog(mess: object!)
         }
     }

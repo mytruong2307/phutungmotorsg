@@ -46,28 +46,31 @@ struct HoiDap {
         if let id = dic["id"] as? Int {
             self.id = id
         }
-
-        //chay local
-//        if let idkhachhang = dic["idkhachhang"] as? Int {
-//            self.idkhachhang = idkhachhang
-//        }
-//        if let trangthai = dic["trangthai"] as? Int {
-//            self.trangthai = trangthai
-//        }
-//        if let sendmail = dic["sendmail"] as? Int {
-//            self.sendmail = sendmail
-//        }
         
-        //chay host
-        if let trangthai = (dic["trangthai"] as? NSString)?.integerValue {
-            self.trangthai = trangthai
+        //chay local
+        if ip != "" {
+            if let idkhachhang = dic["idkhachhang"] as? Int {
+                self.idkhachhang = idkhachhang
+            }
+            if let trangthai = dic["trangthai"] as? Int {
+                self.trangthai = trangthai
+            }
+            if let sendmail = dic["sendmail"] as? Int {
+                self.sendmail = sendmail
+            }
+        } else {
+            //chay host
+            if let trangthai = (dic["trangthai"] as? NSString)?.integerValue {
+                self.trangthai = trangthai
+            }
+            if let sendmail = (dic["sendmail"] as? NSString)?.integerValue {
+                self.sendmail = sendmail
+            }
+            if let idkhachhang = (dic["idkhachhang"] as? NSString)?.integerValue {
+                self.idkhachhang = idkhachhang
+            }
         }
-        if let sendmail = (dic["sendmail"] as? NSString)?.integerValue {
-            self.sendmail = sendmail
-        }
-        if let idkhachhang = (dic["idkhachhang"] as? NSString)?.integerValue {
-            self.idkhachhang = idkhachhang
-        }
+        
         if let ten = dic["ten"] as? String {
             self.ten = ten
         }

@@ -107,12 +107,8 @@ class BaseController: UIViewController, UISearchBarDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if self is ShoppingController {
-            lblCart.text = String (gioHang.count - 2)
-        } else {
-            gioHang = gioHang.filter({ return $0.soluong > 0 })
-            lblCart.text = String (gioHang.count)
-        }
+        let totalAmount = gioHang.reduce(0) {$0 + $1.soluong}
+        lblCart.text = String (totalAmount)
         setupDataMenu()
         tbl.reloadData()
         UIView.animate(withDuration: 0.5) { 

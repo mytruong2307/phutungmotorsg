@@ -43,31 +43,33 @@ struct SanPham {
         }
         
         //Chay local
-//        if let lx_id = sanpham["loaixe_id"] as? Int {
-//            self.loaixe_id = lx_id
-//        }
-//        if let soluong = sanpham["tonkho"] as? Int {
-//            self.soluong = soluong
-//        }
-//        if let gia = sanpham["gia"] as? Double {
-//            self.gia = gia
-//        }
-//        if let giamgia = sanpham["giamgia"] as? Double {
-//            self.giamgia = giamgia
-//        }
-        
-        //Chay host
-        if let newgia = (sanpham["loaixe_id"] as? NSString)?.integerValue {
-            self.loaixe_id = newgia
-        }
-        if let newgia = (sanpham["giamgia"] as? NSString)?.doubleValue {
-            self.giamgia = newgia
-        }
-        if let newgia = (sanpham["gia"] as? NSString)?.doubleValue {
-            self.gia = newgia
-        }
-        if let newgia = (sanpham["tonkho"] as? NSString)?.integerValue {
-            self.soluong = newgia
+        if ip != "" {
+            if let lx_id = sanpham["loaixe_id"] as? Int {
+                self.loaixe_id = lx_id
+            }
+            if let soluong = sanpham["tonkho"] as? Int {
+                self.soluong = soluong
+            }
+            if let gia = sanpham["gia"] as? Double {
+                self.gia = gia
+            }
+            if let giamgia = sanpham["giamgia"] as? Double {
+                self.giamgia = giamgia
+            }
+        } else {
+            //Chay host
+            if let newgia = (sanpham["loaixe_id"] as? NSString)?.integerValue {
+                self.loaixe_id = newgia
+            }
+            if let newgia = (sanpham["giamgia"] as? NSString)?.doubleValue {
+                self.giamgia = newgia
+            }
+            if let newgia = (sanpham["gia"] as? NSString)?.doubleValue {
+                self.gia = newgia
+            }
+            if let newgia = (sanpham["tonkho"] as? NSString)?.integerValue {
+                self.soluong = newgia
+            }
         }
         
         
@@ -85,5 +87,5 @@ struct SanPham {
         }
     }
     
-        
+    
 }

@@ -23,7 +23,7 @@ class TinTucDetailController: BaseController {
         setupView()
         setupData()
     }
-
+    
     func setupView() {
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         //add webview
@@ -45,7 +45,11 @@ class TinTucDetailController: BaseController {
     
     func setupData() {
         var noidung:String = tintuc.noidung
-        noidung = noidung.replacingOccurrences(of: "localhost", with: ip) //Su dung cho localhost
+        if ip != "" {
+            noidung = noidung.replacingOccurrences(of: "localhost", with: ip) //Su dung cho localhost
+        } else {
+            noidung = noidung.replacingOccurrences(of: "localhost", with: domain) //Su dung cho
+        }
         //Dua title vao html
         let title = "<h3 style = 'color:#134267'>" + tintuc.tieude + " (" +  tintuc.created_at.getDate() + ")</h3>"
         //Kich thuoc chuan cua hinh

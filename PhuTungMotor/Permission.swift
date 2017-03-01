@@ -25,14 +25,17 @@ struct Permission {
         if let ten = dic["ten"] as? String {
             self.ten = ten
         }
-        //chay host
-        if let soluong = (dic["soluong"] as? NSString)?.doubleValue {
-            self.soluong = soluong
-        }
         
-        //Chay local
-//        if let soluong = dic["soluong"] as? Double {
-//            self.soluong = soluong
-//        }
+        if ip != "" {
+            //Chay local
+            if let soluong = dic["soluong"] as? Double {
+                self.soluong = soluong
+            }
+        } else {
+            //chay host
+            if let soluong = (dic["soluong"] as? NSString)?.doubleValue {
+                self.soluong = soluong
+            }
+        }
     }
 }

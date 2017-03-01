@@ -12,21 +12,43 @@ import UIKit
 class ShoppingController: ProductController {
     
     let btnShopping = MyButton()
-    let btnThanhToan = MyButton()
+    
+    let lblTong:UILabel = {
+        let v = UILabel()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.text = getTextUI(ui: UI.LBL_SUM)
+        v.font = UIFont.boldSystemFont(ofSize: 17)
+        v.textAlignment = .right
+        return v
+    }()
+    
+    let lblSum:UILabel = {
+        let v = UILabel()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.font = UIFont.boldSystemFont(ofSize: 17)
+        v.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+        v.textAlignment = .right
+        return v
+    }()
+
+    
+    let vTongTien:UIView = {
+        let v = UIView()
+        v.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector:  #selector(ShoppingController.updateShopping), name: NSNotification.Name.init("updateShopping"), object: nil)
         btnShopping.setTitle(getTextUI(ui: UI.BTN_SHOPPING), for: UIControlState.normal)
-        btnThanhToan.setTitle(getTextUI(ui: UI.BTN_THANHTOAN), for: UIControlState.normal)
         colSanPham.register(CellBanner.self, forCellWithReuseIdentifier: "CellBanner")
         colSanPham.register(CellShopping.self, forCellWithReuseIdentifier: "CellShopping")
-        colSanPham.register(CellSumShopping.self, forCellWithReuseIdentifier: "CellSumShopping")
         colSanPham.delegate = self
         colSanPham.dataSource = self
-        gioHang.insert(GioHang(), at: 0)
-        gioHang.append(GioHang())
         updateTotal()
+        showLog(mess: gioHang)
     }
     
     override func setupColLoaiXe() {
@@ -37,79 +59,87 @@ class ShoppingController: ProductController {
         uvLoaiXe.leftAnchor.constraint(equalTo: uvMain.leftAnchor, constant: 5).isActive = true
         
         uvLoaiXe.addSubview(btnShopping)
-        uvLoaiXe.addSubview(btnThanhToan)
+        uvLoaiXe.addSubview(vTongTien)
         uvLoaiXe.addSubview(colLoaiXe)
-        uvLoaiXe.addContraintByVSF(VSF: "H:|[v0]|", views: btnThanhToan)
+        uvLoaiXe.addContraintByVSF(VSF: "H:|[v0]|", views: vTongTien)
         uvLoaiXe.addContraintByVSF(VSF: "H:|[v0]|", views: btnShopping)
         uvLoaiXe.addContraintByVSF(VSF: "H:|[v0]|", views: colLoaiXe)
-        uvLoaiXe.addContraintByVSF(VSF: "V:|[v0(30)]-2-[v1(30)]-2-[v2(30)]|", views: btnThanhToan,btnShopping,colLoaiXe)
+        uvLoaiXe.addContraintByVSF(VSF: "V:|[v0(30)]-2-[v1(30)]-2-[v2(30)]|", views: vTongTien,btnShopping,colLoaiXe)
         
-        btnThanhToan.addTarget(self, action: #selector(ShoppingController.chonHinhThucThanhToan), for: UIControlEvents.touchUpInside)
         btnShopping.addTarget(self, action: #selector(ShoppingController.datHangSanPham), for: UIControlEvents.touchUpInside)
+        btnShopping.becomeFirstResponder()
+        
+        vTongTien.addSubview(lblSum)
+        vTongTien.addSubview(lblTong)
+        
+        lblSum.widthAnchor.constraint(equalTo: vTongTien.widthAnchor, multiplier: 0.5).isActive = true
+        
+        vTongTien.addContraintByVSF(VSF: "V:|[v0]|", views: lblTong)
+        vTongTien.addContraintByVSF(VSF: "V:|[v0]|", views: lblSum)
+        vTongTien.addContraintByVSF(VSF: "H:|[v0]-10-[v1]|", views: lblTong, lblSum)
         
     }
     
-    func datHangSanPham() {
-        showLog(mess: "Dat hang")
-        if thanhtoan == -1 {
-            showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHUATHANHTOAN))
-        } else {
-            
-            if kh == nil {
-                showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.LOGINREGISTER), btnATitle: getAlertMessage(msg: ALERT.LOGIN), btnBTitle: getAlertMessage(msg: ALERT.REGISTER), actionA: {
-                    let scr = LoginController()
-                    scr.shopping = true
-                    self.navigationController?.pushViewController(scr, animated: true)
-                }) {
-                    let scr = RegisterController()
-                    scr.shopping = true
-                    self.navigationController?.pushViewController(scr, animated: true)
-                }
-            } else {
-                var param = Dictionary<String,String>()
-                param["id"] = "\(kh!.id)"
-                param["ten"] = kh?.ten
-                param["email"] = kh?.email
-                param["dienthoai"] = kh?.dienthoai
-                param["tinh"] = kh?.tinh
-                param["quan"] = kh?.quan
-                param["phuong"] = kh?.phuong
-                param["sonha"] = kh?.sonha
-                param["cachthanhtoan"] = "\(thanhtoan)"
-                let tien = NSString(format: "%.0f", gioHang[gioHang.count - 1].sanpham.gia)
-                param["tongtien"] = tien as String
-                let json = convertGioHangToJSON()
-                if json != "" {
-                    param["list"] = json
-                }
-                sendRequestToServer(linkAPI: API.SHOPPING, param: param, method: Method.post, extraLink: nil, completion: { (object) in
-                    let data = object?[getResultAPI(link: API.DATA_RES)] as! String
-                    if data == getResultAPI(link: API.RES_OK) {
-                        gioHang.removeAll()
-                        self.showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.SHOPPINGOK), complete: { 
-                            thanhtoan = -1
-                            let _ = self.navigationController?.popToRootViewController(animated: true)
-                        })
-                    }
-                })
+    func datHang()  {
+        if kh == nil {
+            showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.LOGINREGISTER), btnATitle: getAlertMessage(msg: ALERT.LOGIN), btnBTitle: getAlertMessage(msg: ALERT.REGISTER), actionA: {
+                let scr = LoginController()
+                scr.shopping = true
+                self.navigationController?.pushViewController(scr, animated: true)
+            }) {
+                let scr = RegisterController()
+                scr.shopping = true
+                self.navigationController?.pushViewController(scr, animated: true)
             }
+        } else {
+            var param = Dictionary<String,String>()
+            param["id"] = "\(kh!.id)"
+            param["ten"] = kh?.ten
+            param["email"] = kh?.email
+            param["dienthoai"] = kh?.dienthoai
+            param["tinh"] = kh?.tinh
+            param["quan"] = kh?.quan
+            param["phuong"] = kh?.phuong
+            param["sonha"] = kh?.sonha
+            param["cachthanhtoan"] = "\(thanhtoan)"
+            let tien = NSString(format: "%.0f", gioHang[gioHang.count - 1].sanpham.gia)
+            param["tongtien"] = tien as String
+            let json = convertGioHangToJSON()
+            if json != "" {
+                param["list"] = json
+            }
+            sendRequestToServer(linkAPI: API.SHOPPING, param: param, method: Method.post, extraLink: nil, completion: { (object) in
+                let data = object?[getResultAPI(link: API.DATA_RES)] as! String
+                if data == getResultAPI(link: API.RES_OK) {
+                    gioHang.removeAll()
+                    self.showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.SHOPPINGOK), complete: {
+                        thanhtoan = -1
+                        let _ = self.navigationController?.popToRootViewController(animated: true)
+                    })
+                }
+            })
         }
     }
     
-    func chonHinhThucThanhToan() {
+    func datHangSanPham() {
         showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.THANHTOAN), btnATitle: getAlertMessage(msg: ALERT.TIENMAT), btnBTitle: getAlertMessage(msg: ALERT.CHUYENKHOAN), actionA: {
             thanhtoan = 0
+            self.datHang()
         }) {
             thanhtoan = 1
+            self.datHang()
         }
     }
     
     func updateTotal() {
         var sum:Double = 0
+        var soluong:Int = 0
         for gh in gioHang {
             sum += gh.sanpham.gia * Double (gh.soluong)
+            soluong += gh.soluong
         }
-        gioHang[gioHang.count - 1].sanpham.gia = sum
+        lblCart.text = String (soluong)
+        lblSum.text = showVNCurrency(gia: sum)
     }
     
     func updateShopping(object:Notification)  {
@@ -122,24 +152,23 @@ class ShoppingController: ProductController {
                         break
                     }
                 }
-                self.lblCart.text = String (gioHang.count - 2)
                 self.updateTotal()
                 self.colSanPham.reloadData()
                 showLog(mess: gioHang)
+                self.colSanPham.reloadData()
             })
         } else {
             showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.UPDATESL), complete: {
-                var pos:IndexPath = IndexPath(item: 0, section: 0)
+                var indexPath = IndexPath(item: 0, section: 0)
                 for (index,shop) in gioHang.enumerated() {
                     if shop.sanpham.id == gh.sanpham.id {
                         gioHang[index].soluong = gh.soluong
-                        pos.item = index
+                        indexPath.item = index
                         break
                     }
                 }
                 self.updateTotal()
-                let indexpath:IndexPath = IndexPath(item: gioHang.count - 1, section: 0)
-                self.colSanPham.reloadItems(at: [pos,indexpath])
+                self.colSanPham.reloadItems(at: [indexPath])
                 showLog(mess: gioHang)
             })
             
@@ -149,7 +178,7 @@ class ShoppingController: ProductController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == colSanPham {
-            return gioHang.count
+            return gioHang.count + 1
         } else {
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
@@ -163,14 +192,9 @@ class ShoppingController: ProductController {
                 cell1.title = getTextUI(ui: UI.LBL_SHOPPINGCART)
                 cell1.image = #imageLiteral(resourceName: "shopping_cart")
                 return cell1
-            } else if indexPath.row == gioHang.count - 1 {
-                let cell1 = collectionView.dequeueReusableCell(withReuseIdentifier: "CellSumShopping", for: indexPath) as! CellSumShopping
-                cell1.isSelected = false
-                cell1.gh = gioHang[indexPath.row]
-                return cell1
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellShopping", for: indexPath) as! CellShopping
-                cell.gh = gioHang[indexPath.row]
+                cell.gh = gioHang[indexPath.row - 1]
                 return cell
             }
         } else {
@@ -180,9 +204,8 @@ class ShoppingController: ProductController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == colSanPham {
-            if indexPath.section > 0 {
+            if indexPath.row > 0 {
                 let detail = ProductDetailController()
-                gioHang = gioHang.filter({ return $0.soluong > 0 })
                 var arrSP:Array<SanPham> = []
                 for gh in gioHang {
                     arrSP.append(gh.sanpham)
@@ -200,8 +223,6 @@ class ShoppingController: ProductController {
         if collectionView == colSanPham {
             if indexPath.row == 0 {
                 return CGSize(width: collectionView.frame.width, height: 200)
-            } else if indexPath.row == gioHang.count - 1 {
-                return CGSize(width: collectionView.frame.width, height: 50)
             } else {
                 return CGSize(width: collectionView.frame.width, height: 70)
             }
@@ -227,8 +248,6 @@ class ShoppingController: ProductController {
     }
     
     func convertGioHangToJSON() -> String {
-        //Loai san pham kh co so luong
-        gioHang = gioHang.filter({$0.soluong > 0})
         let jsonCompatibleArray = gioHang.map { model in
             return [
                 "sanpham_id" : model.sanpham.id,
@@ -236,10 +255,6 @@ class ShoppingController: ProductController {
                 "soluong" : model.soluong
             ]
         }
-        //Them lai de dam bao du lieu gio hang
-        gioHang.insert(GioHang(), at: 0)
-        gioHang.append(GioHang())
-        updateTotal()
         do {
             let data = try JSONSerialization.data(withJSONObject: jsonCompatibleArray, options: JSONSerialization.WritingOptions.prettyPrinted)
             let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)

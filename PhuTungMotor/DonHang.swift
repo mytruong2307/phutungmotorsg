@@ -42,40 +42,41 @@ struct DonHang {
         }
         
         //Chay local
-//        if let tongtien = dic["tongtien"] as? Double {
-//            self.tongtien = tongtien
-//        }
-//        if let trangthai = dic["trangthai"] as? Int {
-//            self.trangthai = trangthai
-//        }
-//        if let thanhtoan = dic["thanhtoan"] as? Int {
-//            self.thanhtoan = thanhtoan
-//        }
-//        if let cachthanhtoan = dic["cachthanhtoan"] as? Int {
-//            self.cachthanhtoan = cachthanhtoan
-//        }
-//        if let khachhang_id = dic["khachhang_id"] as? Int {
-//            self.khachhang_id = khachhang_id
-//        }
-        
-        
-        //Chau host
-        if let tongtien = (dic["tongtien"] as? NSString)?.doubleValue {
-            self.tongtien = tongtien
+        if ip != "" {
+            if let tongtien = dic["tongtien"] as? Double {
+                self.tongtien = tongtien
+            }
+            if let trangthai = dic["trangthai"] as? Int {
+                self.trangthai = trangthai
+            }
+            if let thanhtoan = dic["thanhtoan"] as? Int {
+                self.thanhtoan = thanhtoan
+            }
+            if let cachthanhtoan = dic["cachthanhtoan"] as? Int {
+                self.cachthanhtoan = cachthanhtoan
+            }
+            if let khachhang_id = dic["khachhang_id"] as? Int {
+                self.khachhang_id = khachhang_id
+            }
+        } else {
+            
+            //Chau host
+            if let tongtien = (dic["tongtien"] as? NSString)?.doubleValue {
+                self.tongtien = tongtien
+            }
+            if let trangthai = (dic["trangthai"] as? NSString)?.integerValue {
+                self.trangthai = trangthai
+            }
+            if let thanhtoan = (dic["thanhtoan"] as? NSString)?.integerValue {
+                self.thanhtoan = thanhtoan
+            }
+            if let cachthanhtoan = (dic["cachthanhtoan"] as? NSString)?.integerValue {
+                self.cachthanhtoan = cachthanhtoan
+            }
+            if let khachhang_id = (dic["khachhang_id"] as? NSString)?.integerValue {
+                self.khachhang_id = khachhang_id
+            }
         }
-        if let trangthai = (dic["trangthai"] as? NSString)?.integerValue {
-            self.trangthai = trangthai
-        }
-        if let thanhtoan = (dic["thanhtoan"] as? NSString)?.integerValue {
-            self.thanhtoan = thanhtoan
-        }
-        if let cachthanhtoan = (dic["cachthanhtoan"] as? NSString)?.integerValue {
-            self.cachthanhtoan = cachthanhtoan
-        }
-        if let khachhang_id = (dic["khachhang_id"] as? NSString)?.integerValue {
-            self.khachhang_id = khachhang_id
-        }
-        
         if let maxacnhan = dic["maxacnhan"] as? String {
             self.xacnhan = maxacnhan
         }

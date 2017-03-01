@@ -43,7 +43,11 @@ class HoiDapDetailController: BaseController {
         } else {
             noidung += "<p>" + hoidap.tomtat + "</p>"
         }
-        noidung = noidung.replacingOccurrences(of: "localhost", with: ip) //Su dung cho localhost
+        if ip != "" {
+            noidung = noidung.replacingOccurrences(of: "localhost", with: ip) //Su dung cho localhost
+        } else {
+            noidung = noidung.replacingOccurrences(of: "localhost", with: domain)
+        }
         //Thay doi kich thuoc cho tat ca cac hinh
         while let tem = getSubString(str: noidung, findStart: "style=\"height", findEnd: "px\"") {
             noidung = noidung.replacingOccurrences(of: tem, with: sizeImage)
@@ -52,7 +56,7 @@ class HoiDapDetailController: BaseController {
         noidung = noidung.replacingOccurrences(of: "\"", with: "'")
         wv.loadHTMLString(noidung, baseURL: nil)
     }
-
+    
     override func setupBackground() {
         //Huy background
     }

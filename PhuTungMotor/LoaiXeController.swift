@@ -19,7 +19,6 @@ class LoaiXeController: ProductController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        arrSanPham.append(SanPham())
         colSanPham.delegate = self
         colSanPham.dataSource = self
         colSanPham.register(CellSanPham.self, forCellWithReuseIdentifier: "CellSanPham")
@@ -48,6 +47,7 @@ class LoaiXeController: ProductController {
                         })
                       
                     }
+                    showLog(mess: self.arrSanPham.count)
                     self.colSanPham.reloadData()
                 }
             }
@@ -59,7 +59,7 @@ class LoaiXeController: ProductController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == colSanPham {
-            return arrSanPham.count
+            return arrSanPham.count + 1
         } else {
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
@@ -75,7 +75,9 @@ class LoaiXeController: ProductController {
                 return cell1
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellSanPham", for: indexPath) as! CellSanPham
-                cell.sanpham = arrSanPham[indexPath.row]
+                showLog(mess: "so phan tu trong mang\(arrSanPham.count)")
+                showLog(mess: "vi tri: \(indexPath.row - 1)")
+                cell.sanpham = arrSanPham[indexPath.row - 1]
                 cell.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
                 return cell
             }
@@ -113,7 +115,7 @@ class LoaiXeController: ProductController {
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let x = 200 + CGFloat(250 * (arrSanPham.count - 1) / 2) - scrollView.frame.height
+        let x = 200 + 250 * CGFloat(arrSanPham.count) / 2  - scrollView.frame.height
         showLog(mess: "Vi tri y: \(scrollView.contentOffset.y)" )
         showLog(mess: "Vi tri: \(x - scrollView.frame.height)" )
         if scrollView.contentOffset.y == x
@@ -129,9 +131,10 @@ class LoaiXeController: ProductController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == colSanPham {
             let detail = ProductDetailController()
-            arrSanPham.remove(at: 0)
+            showLog(mess: "so phan tu: \(arrSanPham.count)")
+            showLog(mess: "vi tri: \(indexPath.row - 1)")
             detail.arrSanPham = arrSanPham
-            detail.pos = indexPath.row - 1 < 0 ? 0 : indexPath.row - 1
+            detail.pos = indexPath.row - 1
             navigationController?.pushViewController(detail, animated: true)
         } else {
             super.collectionView(collectionView, didSelectItemAt: indexPath)
