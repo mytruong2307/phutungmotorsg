@@ -96,13 +96,14 @@ class SearchController: ProductController {
                             self.colSanPham.reloadItems(at: [IndexPath(item: j, section: 0)])
                         })
                     }
-                    let hienthi = self.arrSanPham.count
-                    self.lblResult.text = " '\(self.keyword)' : \(hienthi)/\(self.tong) "
-                    self.colSanPham.reloadData()
+                    
                 }
             } else {
                 self.page = -1
             }
+            let hienthi = self.arrSanPham.count
+            self.lblResult.text = " '\(self.keyword)' : \(hienthi)/\(self.tong) "
+            self.colSanPham.reloadData()
         }
         
     }
@@ -182,6 +183,8 @@ class SearchController: ProductController {
         keyword = searchBar.text!
         if keyword.characters.count > 0 {
             arrSanPham.removeAll()
+            tong = 0
+            page = 0
             loadDataSanPham()
         }
     }

@@ -12,6 +12,7 @@ import UIKit
 class ShoppingController: ProductController {
     
     let btnShopping = MyButton()
+    var tongtien:Double = 0
     
     let lblTong:UILabel = {
         let v = UILabel()
@@ -30,7 +31,7 @@ class ShoppingController: ProductController {
         v.textAlignment = .right
         return v
     }()
-
+    
     
     let vTongTien:UIView = {
         let v = UIView()
@@ -102,20 +103,25 @@ class ShoppingController: ProductController {
             param["phuong"] = kh?.phuong
             param["sonha"] = kh?.sonha
             param["cachthanhtoan"] = "\(thanhtoan)"
-            let tien = NSString(format: "%.0f", gioHang[gioHang.count - 1].sanpham.gia)
+            let tien = NSString(format: "%.0f", tongtien)
             param["tongtien"] = tien as String
             let json = convertGioHangToJSON()
+            showLog(mess: "San pham " + json)
             if json != "" {
                 param["list"] = json
             }
             sendRequestToServer(linkAPI: API.SHOPPING, param: param, method: Method.post, extraLink: nil, completion: { (object) in
-                let data = object?[getResultAPI(link: API.DATA_RES)] as! String
-                if data == getResultAPI(link: API.RES_OK) {
-                    gioHang.removeAll()
-                    self.showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.SHOPPINGOK), complete: {
-                        thanhtoan = -1
-                        let _ = self.navigationController?.popToRootViewController(animated: true)
-                    })
+                if object != nil {
+                    let data = object?[getResultAPI(link: API.DATA_RES)] as! String
+                    if data == getResultAPI(link: API.RES_OK) {
+                        gioHang.removeAll()
+                        self.showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.SHOPPINGOK), complete: {
+                            thanhtoan = -1
+                            let _ = self.navigationController?.popToRootViewController(animated: true)
+                        })
+                    }
+                } else {
+                    self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.SHOPPINGNOK))
                 }
             })
         }
@@ -140,6 +146,7 @@ class ShoppingController: ProductController {
         }
         lblCart.text = String (soluong)
         lblSum.text = showVNCurrency(gia: sum)
+        tongtien = sum
     }
     
     func updateShopping(object:Notification)  {
@@ -262,6 +269,6 @@ class ShoppingController: ProductController {
         } catch {
             return ""
         }
-
+        
     }
 }

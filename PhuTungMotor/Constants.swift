@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.104"
+let ip = "192.168.1.103"
 let domain = "http://\(ip)/phutungmoto"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"
@@ -110,6 +110,7 @@ enum ALERT:String {
     case CHONTRANG = "Bạn chọn vào trang nào?"
     case NOPERMISSION = "Bạn không có quyền vào mục này"
     case DIFERRENTUSER = "User không hợp lệ"
+    case SHOPPINGNOK = "Đặt hàng không thành công"
     
     func getAlertMessage() -> String{
         return self.rawValue
