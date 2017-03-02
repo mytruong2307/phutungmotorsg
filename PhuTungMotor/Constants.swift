@@ -31,6 +31,7 @@ enum API:String {
     case CHANGEPASS = "changePass"
     case NEWS = "tintuc"
     case FAQ = "hoidap"
+    case MYFAQ = "hoidapcuatoi"
     case HOME = "trangchu"
     case IMAGE = "hinh"
     case SHOPPING = "dathang"
@@ -43,6 +44,7 @@ enum API:String {
     case DOANHTHU = "doanhthu"
     case THONGTIN = "thongtin"
     case SUATHONGTIN = "suathongtin"
+    case DATCAUHOI = "datcauhoi"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -111,7 +113,9 @@ enum ALERT:String {
     case NOPERMISSION = "Bạn không có quyền vào mục này"
     case DIFERRENTUSER = "User không hợp lệ"
     case SHOPPINGNOK = "Đặt hàng không thành công"
-    
+    case ASKOK = "Gửi câu hỏi thành công, chúng tôi sẽ trả lời cho bạn sớm nhất có thể."
+    case ASKNOK = "GỬI KHÔNG THÀNH CÔNG. BẠN HÃY THỬ LẠI SAU VÀI PHÚT NỮA"
+    case NOLOGIN = "Bạn chưa đăng nhập"
     func getAlertMessage() -> String{
         return self.rawValue
     }
@@ -171,7 +175,13 @@ enum UI:String {
     case LBL_PRODUCT = "sản phẩm"
     case LBL_PERMISSION = "DANH SÁCH QUYỀN"
     case LBL_WEB = "Web:"
-
+    case LBL_ASK = "Đặt câu hỏi"
+    case LBL_ASKCONTENT = "Nội dung câu hỏi"
+    case LBL_SENDMAIL = "Gửi mail khi có câu trả lời"
+    case LBL_ASKOBJECT = "Xem: "
+    case LBL_MYASK = "CỦA TÔI"
+    case LBL_ALLASK = "TẤT CẢ"
+    case LBL_NOANSWER = "Chưa trả lời"
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -188,6 +198,9 @@ enum UI:String {
     case BTN_UPDATENO = "SỬA"
     case BTN_THANHTOAN = "CHỌN HÌNH THỨC THANH TOÁN"
     case BTN_DETAIL = "Xem chi tiết..."
+    case BTN_ASK = "ĐẶT CÂU HỎI"
+    case BTN_POSTASK = "GỬI CÂU HỎI"
+    case BTN_MYASK = "XEM CÂU HỎI CỦA TÔI"
     
     case DAY = "ngày trước"
     case HOUR = "giờ trước"

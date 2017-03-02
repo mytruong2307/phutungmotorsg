@@ -58,6 +58,10 @@ class CellHoiDap: BaseCollectCell {
         lblCauHoi.text = hoidap.cauhoi
         lblNguoiHoi.text = hoidap.ten
         lblNgayHoi.text = hoidap.created_at.getDurationTime()
-        lblTomTat.text = hoidap.tomtat
+        if hoidap.tomtat == "" {
+            lblTomTat.text = getTextUI(ui: UI.LBL_NOANSWER)
+        } else {
+            lblTomTat.text = hoidap.tomtat
+        }
     }
 }

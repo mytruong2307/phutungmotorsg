@@ -62,6 +62,7 @@
 		84BDBAD61E599D7A0082D571 /* GioHang.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BDBAD51E599D7A0082D571 /* GioHang.swift */; };
 		84D47FFC1E1F9A3B00F93FFD /* HoiDapDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D47FFB1E1F9A3B00F93FFD /* HoiDapDetailController.swift */; };
 		84D47FFE1E1F9B3300F93FFD /* CellHoiDap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D47FFD1E1F9B3300F93FFD /* CellHoiDap.swift */; };
+		84D4E1F11E67CC6600E00D44 /* DatCauHoiController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D4E1F01E67CC6600E00D44 /* DatCauHoiController.swift */; };
 		84E8DBCF1E5FD2EC00636E26 /* CellPhanQuyen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E8DBCE1E5FD2EC00636E26 /* CellPhanQuyen.swift */; };
 		84FAEEEE1E0CD22400745B1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FAEEED1E0CD22400745B1D /* AppDelegate.swift */; };
 		84FAEEF31E0CD22400745B1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84FAEEF11E0CD22400745B1D /* Main.storyboard */; };
@@ -126,6 +127,7 @@
 		84BDBAD51E599D7A0082D571 /* GioHang.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GioHang.swift; sourceTree = "<group>"; };
 		84D47FFB1E1F9A3B00F93FFD /* HoiDapDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HoiDapDetailController.swift; sourceTree = "<group>"; };
 		84D47FFD1E1F9B3300F93FFD /* CellHoiDap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellHoiDap.swift; sourceTree = "<group>"; };
+		84D4E1F01E67CC6600E00D44 /* DatCauHoiController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatCauHoiController.swift; sourceTree = "<group>"; };
 		84E8DBCE1E5FD2EC00636E26 /* CellPhanQuyen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellPhanQuyen.swift; sourceTree = "<group>"; };
 		84FAEEEA1E0CD22400745B1D /* PhuTungMotor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhuTungMotor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84FAEEED1E0CD22400745B1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				846AEF071E5B2D48000805C9 /* DonHangController.swift */,
 				847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */,
 				8441CE261E5DB81C00B95A39 /* SearchController.swift */,
+				84D4E1F01E67CC6600E00D44 /* DatCauHoiController.swift */,
 			);
 			name = Custommer;
 			sourceTree = "<group>";
@@ -442,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D47FFE1E1F9B3300F93FFD /* CellHoiDap.swift in Sources */,
+				84D4E1F11E67CC6600E00D44 /* DatCauHoiController.swift in Sources */,
 				8486E19F1E6034320085782D /* ListPerController.swift in Sources */,
 				84B03A101E189FEC0030B767 /* SanPham.swift in Sources */,
 				84B03A0C1E189FAD0030B767 /* HangXe.swift in Sources */,
