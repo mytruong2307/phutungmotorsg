@@ -25,17 +25,44 @@ class ChangePassController: BaseController {
         let v = MyButton()
         return v
     }()
-    
+    var top:NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupFormChangePass()
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(ChangePassController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChangePassController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        top = uvFormBase.topAnchor.constraint(equalTo: uvMain.topAnchor, constant: 30)
     }
     
     override func addHomeIcon() {
         //Huy home menu
     }
+    
+    func show(_ notification:NSNotification)
+    {
+        let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
+        
+        let khoangcach = UIScreen.main.bounds.height - (uvFormBase.frame.height + uvFormBase.frame.origin.y) - sizeKeyboard.height
+        if khoangcach < 0 {
+            top = uvFormBase.topAnchor.constraint(equalTo: uvMain.topAnchor, constant: uvFormBase.frame.origin.y + khoangcach - 54)
+            top.isActive = true
+            center.isActive = false
+        }
+        showLog(mess: khoangcach)
+        
+    }
+    
+    func hide(_ notification:NSNotification)
+    {
+        center.isActive = true
+        top.isActive = false
+        UIView.animate(withDuration: 1) {
+            self.view.layoutSubviews()
+        }
+    }
+
     
     func setupFormChangePass() {
         //Danh sach ca view de autolayout code tay

@@ -21,6 +21,9 @@ class BaseController: UIViewController, UISearchBarDelegate {
     let user:UserDefaults = UserDefaults()
     var isOpenMenu:Bool = false
     
+    var center:NSLayoutConstraint!
+
+    
     let uvMenu:UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -245,7 +248,8 @@ class BaseController: UIViewController, UISearchBarDelegate {
         uvMain.addSubview(uvFormBase)
         
         uvFormBase.centerXAnchor.constraint(equalTo: uvMain.centerXAnchor).isActive = true
-        uvFormBase.centerYAnchor.constraint(equalTo: uvMain.centerYAnchor).isActive = true
+        center = uvFormBase.centerYAnchor.constraint(equalTo: uvMain.centerYAnchor)
+        center.isActive = true
         uvFormBase.widthAnchor.constraint(equalTo: uvMain.widthAnchor, multiplier: 0.85).isActive = true
         
         uvBackBase.leftAnchor.constraint(equalTo: uvFormBase.leftAnchor).isActive = true

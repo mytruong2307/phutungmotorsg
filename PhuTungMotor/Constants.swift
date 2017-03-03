@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.103"
+let ip = "192.168.1.102"
 let domain = "http://\(ip)/phutungmoto"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"

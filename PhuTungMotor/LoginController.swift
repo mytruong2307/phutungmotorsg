@@ -13,10 +13,13 @@ class LoginController: BaseController {
     var txtEmail, txtMatKhau:MyTextField!
     var remember = true
     var shopping = false
+    
+    var top:NSLayoutConstraint!
+    
     let lblTitle:UILabel = {
         let v = UILabel()
         v.textColor = Constants.MY_TEXT_COLOR
-        v.font = UIFont(name: "Hoefler Text", size: 36)
+        v.font = UIFont(name: "Hoefler Text", size: 27)
         v.textAlignment = .center
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
@@ -37,8 +40,10 @@ class LoginController: BaseController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         setupFormLogin()
-        
+        top = uvFormBase.topAnchor.constraint(equalTo: uvMain.topAnchor, constant: 30)
     }
     
     override func addHomeIcon() {
@@ -97,12 +102,38 @@ class LoginController: BaseController {
             uvFormBase.addContraintByVSF(VSF: "H:|-20-[v0]-20-|", views: view)
         }
         uvFormBase.addContraintByVSF(VSF: "V:|[v0(70)][v1(21)]-4-[v2(30)]-20-[v3(21)]-4-[v4(30)]-20-[v5(30)]-20-[v6(30)]-10-[v7(30)]-10-[v8(30)]-20-|", views: arrView)
+    
         
         btnLogin.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         btnRegister.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         btnForgot.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         
     }
+    
+    func show(_ notification:NSNotification)
+    {
+        let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
+        
+        let khoangcach = UIScreen.main.bounds.height - (uvFormBase.frame.height + uvFormBase.frame.origin.y) - sizeKeyboard.height
+        if khoangcach < 0 {
+            top = uvFormBase.topAnchor.constraint(equalTo: uvMain.topAnchor, constant: uvFormBase.frame.origin.y + khoangcach - 54)
+            top.isActive = true
+            center.isActive = false
+        }
+        showLog(mess: khoangcach)
+        
+    }
+    
+    func hide(_ notification:NSNotification)
+    {
+        center.isActive = true
+        top.isActive = false
+        UIView.animate(withDuration: 1) {
+            self.view.layoutSubviews()
+        }
+    }
+
     
     func ghiNhoLogin(_ sender:UISwitch) {
         remember = sender.isOn
@@ -156,6 +187,7 @@ class LoginController: BaseController {
                 showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: check)
             }
         } else if (sender == btnRegister) {
+            
             let scr = RegisterController()
             navigationController?.pushViewController(scr, animated: true)
         } else {

@@ -58,12 +58,13 @@ class UpdateInfoController: BaseController {
     }()
     
     var gender = 1
+    var bottom_Normal:NSLayoutConstraint!
+    var bottom_Key:NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(RegisterController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(UpdateInfoController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(UpdateInfoController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
 
         var param = Dictionary<String,String>()
         param["tenTinh"] = kh!.tinh
@@ -76,16 +77,13 @@ class UpdateInfoController: BaseController {
         }
                 
         setupFormUpdate()
-        
         txtTam = MyTextField()
-        
         tblMain.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tblMain.isHidden = true
         tblMain.delegate = self
         tblMain.dataSource = self
-        
-        
     }
+    
     
     override func addHomeIcon() {
         //Huy home menu
@@ -109,19 +107,19 @@ class UpdateInfoController: BaseController {
         viewForScroll.addSubview(uvForm)
         
         uvForm.centerXAnchor.constraint(equalTo: viewForScroll.centerXAnchor).isActive = true
-        uvForm.centerYAnchor.constraint(equalTo: viewForScroll.centerYAnchor).isActive = true
+        uvForm.topAnchor.constraint(equalTo: viewForScroll.topAnchor, constant: 20).isActive = true
         uvForm.widthAnchor.constraint(equalTo: viewForScroll.widthAnchor, multiplier: 0.85).isActive = true
+        bottom_Normal = uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -20)
+        bottom_Normal.isActive = true
         
         uvBackground.leftAnchor.constraint(equalTo: uvForm.leftAnchor).isActive = true
         uvBackground.topAnchor.constraint(equalTo: uvForm.topAnchor).isActive = true
         uvBackground.widthAnchor.constraint(equalTo: uvForm.widthAnchor).isActive = true
         uvBackground.heightAnchor.constraint(equalTo: uvForm.heightAnchor).isActive = true
-        
-        
+                
         //Danh sach ca view de autolayout code tay
         var arrView:Array<UIView> = []
-        
-        
+    
         //Add title
         lblTitle.text = getTextUI(ui: UI.TTL_UPDATEINFO)
         arrView.append(lblTitle)
@@ -281,15 +279,31 @@ class UpdateInfoController: BaseController {
             }
         }
         uvForm.addContraintByVSF(VSF: vertical, views: arrView)
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -50).isActive = true
         uvForm.addSubview(tblMain)
+        
         btnUpdate.addTarget(self, action: #selector(UpdateInfoController.update), for: .touchUpInside)
     }
-    
-    func nhapData(_ sender:MyTextField) {
-        point = (sender.superview?.convert(sender.frame.origin, to: nil))!
-        khoangCach = uvForm.frame.origin.y + sender.frame.origin.y
+    func show(_ notification:NSNotification)
+    {
+        let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
+        khoangCach = 40 - sizeKeyboard.height
         showLog(mess: khoangCach)
+        bottom_Key = uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -40 + khoangCach)
+        bottom_Key.isActive = true
+        bottom_Normal.isActive = false
+    }
+    
+    func hide(_ notification:NSNotification)
+    {
+        bottom_Key.isActive = false
+        bottom_Normal.isActive = true
+        UIView.animate(withDuration: 1) {
+            self.view.layoutSubviews()
+        }
+    }
+
+    func nhapData(_ sender:MyTextField) {
         txtTam = sender
         var link:String = getLinkService(link: API.PROVINCE)
         switch sender {
@@ -354,29 +368,7 @@ class UpdateInfoController: BaseController {
             tblMain.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y - 201,  width: sender.frame.size.width, height: 200)
             tblMain.isHidden = false
         }
-        
-        
     }
-    
-    func show(_ notification:NSNotification)
-    {
-        let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -(1 + sizeKeyboard.size.height)).isActive = true
-        UIView.animate(withDuration: 1, animations: {
-            self.view.layoutSubviews()
-            self.scroll.setContentOffset(CGPoint(x: 0, y: sizeKeyboard.size.height + self.khoangCach), animated: true)
-        })
-    }
-    
-    func hide(_ notification:NSNotification)
-    {
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -50).isActive = true
-        UIView.animate(withDuration: 1) {
-            self.view.layoutSubviews()
-        }
-    }
-    
     
     func chonGioiTinh(_ sender:UISegmentedControl) {
         gender = sender.selectedSegmentIndex
@@ -464,7 +456,5 @@ class UpdateInfoController: BaseController {
             super.tableView(tableView, didSelectRowAt: indexPath)
         }
     }
-    
-    
     
 }

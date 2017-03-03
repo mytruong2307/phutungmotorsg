@@ -17,6 +17,9 @@ class RegisterController: BaseController {
     var point:CGPoint = CGPoint()
     var shopping = false // Đanhs dau mua hang
     
+    var bottom_Normal:NSLayoutConstraint!
+    var bottom_Key:NSLayoutConstraint!
+    
     let scroll:UIScrollView = {
         let v:UIScrollView = UIScrollView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -32,7 +35,7 @@ class RegisterController: BaseController {
     let lblTitle:UILabel = {
         let v = UILabel()
         v.textColor = Constants.MY_TEXT_COLOR
-        v.font = UIFont(name: "Hoefler Text", size: 36)
+        v.font = UIFont(name: "Hoefler Text", size: 27)
         v.textAlignment = .center
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
@@ -56,6 +59,8 @@ class RegisterController: BaseController {
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
+    
+    let btnRegister:MyButton = MyButton()
     
     var gender = 1
     
@@ -88,8 +93,8 @@ class RegisterController: BaseController {
         super.uvMain.addViewFullScreen(views: scroll)
         
         scroll.addViewFullScreen(views: viewForScroll)
-        viewForScroll.widthAnchor.constraint(equalTo: super.uvMain.widthAnchor, multiplier: 1).isActive = true
-        viewForScroll.heightAnchor.constraint(greaterThanOrEqualTo: super.uvMain.heightAnchor, multiplier: 1).isActive = true
+        viewForScroll.widthAnchor.constraint(equalTo: uvMain.widthAnchor, multiplier: 1).isActive = true
+        viewForScroll.heightAnchor.constraint(greaterThanOrEqualTo: uvMain.heightAnchor, multiplier: 1).isActive = true
         
         
         //Add 2 view de chen form vao
@@ -97,8 +102,10 @@ class RegisterController: BaseController {
         viewForScroll.addSubview(uvForm)
         
         uvForm.centerXAnchor.constraint(equalTo: viewForScroll.centerXAnchor).isActive = true
-        uvForm.centerYAnchor.constraint(equalTo: viewForScroll.centerYAnchor).isActive = true
+        uvForm.topAnchor.constraint(equalTo: viewForScroll.topAnchor, constant: 20).isActive = true
         uvForm.widthAnchor.constraint(equalTo: viewForScroll.widthAnchor, multiplier: 0.85).isActive = true
+        bottom_Normal = uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -20)
+        bottom_Normal.isActive = true
         
         uvBackground.leftAnchor.constraint(equalTo: uvForm.leftAnchor).isActive = true
         uvBackground.topAnchor.constraint(equalTo: uvForm.topAnchor).isActive = true
@@ -274,10 +281,10 @@ class RegisterController: BaseController {
         i += 2
         
         //Add button
-        let btnRegister:MyButton = MyButton()
+        
         btnRegister.setTitle(getTextUI(ui: UI.FRM_REGISTER), for: UIControlState.normal)
         arrView.append(btnRegister)
-        
+
         vertical = "\(vertical)[v\(i)(30)]-20-|"
         showLog(mess: vertical)
         
@@ -289,17 +296,12 @@ class RegisterController: BaseController {
             }
         }
         uvForm.addContraintByVSF(VSF: vertical, views: arrView)
-        
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -50).isActive = true
         uvForm.addSubview(tblMain)
         
         btnRegister.addTarget(self, action: #selector(RegisterController.register), for: .touchUpInside)
     }
     
     func nhapData(_ sender:MyTextField) {
-        point = (sender.superview?.convert(sender.frame.origin, to: nil))!
-        khoangCach = uvForm.frame.origin.y + sender.frame.origin.y
-        showLog(mess: khoangCach)
         txtTam = sender
         var link:String = getLinkService(link: API.PROVINCE)
         switch sender {
@@ -370,16 +372,18 @@ class RegisterController: BaseController {
     {
         let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
         let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -(1 + sizeKeyboard.size.height)).isActive = true
-        UIView.animate(withDuration: 1, animations: {
-            self.view.layoutSubviews()
-            self.scroll.setContentOffset(CGPoint(x: 0, y: sizeKeyboard.size.height + self.khoangCach), animated: true)
-        })
+        khoangCach = 40 - sizeKeyboard.height
+        bottom_Key = uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -40 + khoangCach)
+        bottom_Key.isActive = true
+        bottom_Normal.isActive = false
     }
     
     func hide(_ notification:NSNotification)
     {
-        uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: -50).isActive = true
+        if bottom_Key != nil {
+            bottom_Key.isActive = false
+        }
+        bottom_Normal.isActive = true
         UIView.animate(withDuration: 1) {
             self.view.layoutSubviews()
         }
