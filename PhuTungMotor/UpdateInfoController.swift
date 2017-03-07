@@ -296,7 +296,9 @@ class UpdateInfoController: BaseController {
     
     func hide(_ notification:NSNotification)
     {
-        bottom_Key.isActive = false
+        if bottom_Key != nil {
+            bottom_Key.isActive = false
+        }
         bottom_Normal.isActive = true
         UIView.animate(withDuration: 1) {
             self.view.layoutSubviews()

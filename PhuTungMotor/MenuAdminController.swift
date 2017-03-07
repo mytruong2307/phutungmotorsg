@@ -11,6 +11,15 @@ import UIKit
 
 class MenuAdminController: BaseController {
     
+    let col:UICollectionView = {
+        let scrDirection = UICollectionViewFlowLayout()
+        scrDirection.scrollDirection = .vertical
+        let v = UICollectionView(frame: CGRect.zero, collectionViewLayout: scrDirection)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        return v
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if kh == nil || kh?.quyen.count == 0 {
@@ -72,8 +81,14 @@ class MenuAdminController: BaseController {
     
     override func addMenuIcon() {
         //Bo cart
+        let searchBtn = UIBarButtonItem(image: #imageLiteral(resourceName: "search"), style: .plain, target: self, action: #selector(BaseController.search))
+        let right = UIBarButtonItem(image: #imageLiteral(resourceName: "add"), style: .plain, target: self, action: #selector(MenuAdminController.them))
+        self.navigationItem.rightBarButtonItems = [right, searchBtn]
     }
     
+    func them() {
+        
+    }
     func changePer(per:Permission) {
         switch per.ten {
         case "Kết Quả":
@@ -83,7 +98,13 @@ class MenuAdminController: BaseController {
             
             break
         case "Tài khoản":
-            
+            showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHOOSEACCOUNT), btnATitle: getAlertMessage(msg: ALERT.NHANVIEN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: { 
+                self.navigationController?.pushViewController(TaiKhoanController(), animated: true)
+            }, actionB: {
+                let scr = TaiKhoanController()
+                scr.isEmployee = false
+                self.navigationController?.pushViewController(scr, animated: true)
+            })
             break
         case "Tin tức":
             

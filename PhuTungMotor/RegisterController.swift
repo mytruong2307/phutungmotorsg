@@ -90,7 +90,7 @@ class RegisterController: BaseController {
     
     func setupFormRegister() {
         //ScrollView
-        super.uvMain.addViewFullScreen(views: scroll)
+        uvMain.addViewFullScreen(views: scroll)
         
         scroll.addViewFullScreen(views: viewForScroll)
         viewForScroll.widthAnchor.constraint(equalTo: uvMain.widthAnchor, multiplier: 1).isActive = true

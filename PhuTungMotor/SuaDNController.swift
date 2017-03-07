@@ -45,32 +45,17 @@ class SuaDNController:MenuAdminController {
         return v
     }()
 
+    var bottom: NSLayoutConstraint!
+    var top:NSLayoutConstraint!
+    
+    override func addHomeIcon() {
+        //Huy menu
+    }
+    
+    override func addMenuIcon() {
+        //Bo nut them
+    }
     override func addForm() {
-        //Huy form goc
-    }
-
-    
-    var txtTen, txtDienThoai, txtEmail, txtWeb:MyTextField!
-    var txtDiaChi:UITextView!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupForm()
-        setupDataForm()
-    }
-    
-    func setupDataForm() {
-        sendRequestAdmin(linkAPI: API.THONGTIN) { (data) in
-            let thongtin = data?[getResultAPI(link: API.DATA_RETURN)] as! Dictionary<String,Any>
-            self.txtTen.text = thongtin["ten"] as! String?
-            self.txtWeb.text = thongtin["web"] as! String?
-            self.txtEmail.text = thongtin["email"] as! String?
-            self.txtDiaChi.text = thongtin["diachi"] as! String?
-            self.txtDienThoai.text = thongtin["sodienthoai"] as! String?
-        }
-    }
-    
-    func setupForm() {
         //ScrollView
         uvMain.addViewFullScreen(views: scroll)
         
@@ -78,14 +63,19 @@ class SuaDNController:MenuAdminController {
         viewForScroll.widthAnchor.constraint(equalTo: uvMain.widthAnchor, multiplier: 1).isActive = true
         viewForScroll.heightAnchor.constraint(greaterThanOrEqualTo: uvMain.heightAnchor, multiplier: 1).isActive = true
         
-         
+        
         //Add 2 view de chen form vao
         viewForScroll.addSubview(uvBackground)
         viewForScroll.addSubview(uvForm)
         
         uvForm.centerXAnchor.constraint(equalTo: viewForScroll.centerXAnchor).isActive = true
-        uvForm.centerYAnchor.constraint(equalTo: viewForScroll.centerYAnchor).isActive = true
         uvForm.widthAnchor.constraint(equalTo: viewForScroll.widthAnchor, multiplier: 0.85).isActive = true
+        center = uvForm.centerYAnchor.constraint(equalTo: viewForScroll.centerYAnchor, constant: 0)
+        center.isActive = true
+        
+        top = uvForm.topAnchor.constraint(equalTo: viewForScroll.topAnchor, constant: 20)
+//        top.isActive = true
+        
         
         uvBackground.leftAnchor.constraint(equalTo: uvForm.leftAnchor).isActive = true
         uvBackground.topAnchor.constraint(equalTo: uvForm.topAnchor).isActive = true
@@ -100,7 +90,7 @@ class SuaDNController:MenuAdminController {
         //Add title
         lblTitle.text = getTextUI(ui: UI.TTL_UPDATEINFO)
         arrView.append(lblTitle)
-
+        
         var vertical = "V:|[v0(70)]"
         var i = 1
         
@@ -144,7 +134,7 @@ class SuaDNController:MenuAdminController {
         arrView.append(lblDiaChi)
         
         txtDiaChi = UITextView()
-        txtDiaChi.font = UIFont.boldSystemFont(ofSize: 14)
+        txtDiaChi.font = UIFont.systemFont(ofSize: 15)
         txtDiaChi.clipsToBounds = true
         txtDiaChi.layer.cornerRadius = 5
         txtDiaChi.isEditable = true
@@ -170,8 +160,6 @@ class SuaDNController:MenuAdminController {
         arrView.append(btnUpdate)
         
         vertical = "\(vertical)[v\(i)(30)]-20-|"
-        showLog(mess: arrView.count)
-        showLog(mess: vertical)
         
         for view in arrView {
             uvForm.addSubview(view)
@@ -180,6 +168,52 @@ class SuaDNController:MenuAdminController {
         uvForm.addContraintByVSF(VSF: vertical, views: arrView)
         
         btnUpdate.addTarget(self, action: #selector(SuaDNController.updateThongTinDN), for: .touchUpInside)
+    }
+
+    
+    var txtTen, txtDienThoai, txtEmail, txtWeb:MyTextField!
+    var txtDiaChi:UITextView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(SuaDNController.show(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SuaDNController.hide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        setupDataForm()
+    }
+    
+    func setupDataForm() {
+        paramAdmin["truycap"] = "5"
+        sendRequestAdmin(linkAPI: API.THONGTIN) { (data) in
+            let thongtin = data?[getResultAPI(link: API.DATA_RETURN)] as! Dictionary<String,Any>
+            self.txtTen.text = thongtin["ten"] as! String?
+            self.txtWeb.text = thongtin["web"] as! String?
+            self.txtEmail.text = thongtin["email"] as! String?
+            self.txtDiaChi.text = thongtin["diachi"] as! String?
+            self.txtDienThoai.text = thongtin["sodienthoai"] as! String?
+        }
+    }
+    
+    func show(_ notification:NSNotification)
+    {
+        let valueKeyboard:NSValue = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        let sizeKeyboard:CGRect = valueKeyboard.cgRectValue
+        center.isActive = false
+        top.isActive = true
+        bottom = uvForm.bottomAnchor.constraint(equalTo: viewForScroll.bottomAnchor, constant: sizeKeyboard.height * (-1))
+        bottom.isActive = true
+    }
+    
+    func hide(_ notification:NSNotification)
+    {
+        if bottom != nil {
+            bottom.isActive = false
+            
+        }
+        top.isActive = false
+        center.isActive = true
+        UIView.animate(withDuration: 1) {
+            self.view.layoutSubviews()
+        }
     }
     
     func updateThongTinDN() {
@@ -190,7 +224,6 @@ class SuaDNController:MenuAdminController {
         param["email"] = txtEmail.text
         param["web"] = txtWeb.text
         param["newToken"] = "1"
-        showLog(mess: param)
         sendRequestAdmin(linkAPI: API.SUATHONGTIN, param: param, method: Method.post, extraLink: nil) { (data) in
             self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.UPDATEOK), complete: {
                 self.popToAdminController()

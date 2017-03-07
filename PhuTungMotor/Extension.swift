@@ -38,6 +38,12 @@ extension UIView
         }
         
     }
+    
+    func addSubview(views:UIView...) {
+        for view in views {
+            self.addSubview(view)
+        }
+    }
 }
 
 extension UIImageView
@@ -564,10 +570,10 @@ extension UIViewController
                             
                             let res = data[getResultAPI(link: API.DATA_RES)] as! String
                             if res == getResultAPI(link: API.RES_OK) {
-                                let nv = data["nv"] as! Dictionary<String,String>
-                                let email = nv["email"]
+                                let nv = data["nv"] as! Dictionary<String,Any>
+                                let email = nv["email"] as! String
                                 if email == kh?.email {
-                                    paramAdmin["token"] = nv["maxacnhan"]
+                                    paramAdmin["token"] = nv["maxacnhan"] as? String
                                     if paramAdmin["newToken"] == "1" {
                                         paramAdmin["newToken"] = "0"
                                     }
@@ -633,26 +639,30 @@ extension UIViewController
                     let object = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
                     if let data = object as? Dictionary<String,Any> {
                         DispatchQueue.main.async {
-                            
                             let res = data[getResultAPI(link: API.DATA_RES)] as! String
                             if res == getResultAPI(link: API.RES_OK) {
-                                let nv = data["nv"] as! Dictionary<String,String>
-                                let email = nv["email"]
+                                let nv = data["nv"] as! Dictionary<String,Any>
+                                let email = nv["email"] as! String
                                 if email == kh?.email {
-                                    paramAdmin["token"] = nv["maxacnhan"]
+                                    paramAdmin["token"] = nv["maxacnhan"] as? String
                                     if paramAdmin["newToken"] == "1" {
                                         paramAdmin["newToken"] = "0"
                                     }
+                                    paramAdmin["quyen"] = nv["quyen"] as? String
                                     showLog(mess: paramAdmin)
                                     completion(data)
                                 } else {
-                                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.DIFERRENTUSER), complete: {
+                                    //Khong co quyen
+                                    let err = data[getResultAPI(link: API.DATA_ERR)] as! String
+                                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: err, complete: {
                                         let _ = self.navigationController?.popToRootViewController(animated: true)
                                     })
                                     
                                 }
                             } else {
-                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.NOPERMISSION), complete: {
+                                //Khong co quyen
+                                let err = data[getResultAPI(link: API.DATA_ERR)] as! String
+                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: err, complete: {
                                     let _ = self.navigationController?.popToRootViewController(animated: true)
                                 })
                             }

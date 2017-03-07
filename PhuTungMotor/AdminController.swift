@@ -11,15 +11,6 @@ import UIKit
 
 class AdminController: MenuAdminController {
     
-    let col:UICollectionView = {
-        let scrDirection = UICollectionViewFlowLayout()
-        scrDirection.scrollDirection = .vertical
-        let v = UICollectionView(frame: CGRect.zero, collectionViewLayout: scrDirection)
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        return v
-    }()
-    
     var load = false // animation lan dau tien
     
     var arrPer: Array<Permission> = []
@@ -33,6 +24,14 @@ class AdminController: MenuAdminController {
         col.register(CellBanner.self, forCellWithReuseIdentifier: "CellBanner")
     }
     
+    override func addMenuIcon() {
+        //Bo nut add
+    }
+    
+    override func setupBackground() {
+        //Huy background
+    }
+    
     func setupDataPermission()  {
         if arrPer.count == 0 {
             for per in (kh?.quyen)! {
@@ -41,10 +40,12 @@ class AdminController: MenuAdminController {
                 var link = ""
                 switch per {
                 case "Kết Quả":
+                    paramAdmin["truycap"] = "0"
                     link = getLinkAdminSer(link: API.DOANHTHU)
                     quyen.imgIcon = #imageLiteral(resourceName: "ketqua_black")
                     break
                 case "Hỏi đáp":
+                    paramAdmin["truycap"] = "3"
                     link = getLinkAdminSer(link: API.SOHOIDAP)
                     quyen.imgIcon = #imageLiteral(resourceName: "faq_black")
                     break
@@ -67,6 +68,7 @@ class AdminController: MenuAdminController {
                     quyen.imgIcon = #imageLiteral(resourceName: "sanpham_black")
                     break
                 case "Đơn hàng":
+                    paramAdmin["truycap"] = "9"
                     link = getLinkAdminSer(link: API.SODONHANG)
                     quyen.imgIcon = #imageLiteral(resourceName: "donhang_black")
                     break
@@ -80,11 +82,8 @@ class AdminController: MenuAdminController {
                     let j = arrPer.count
                     sendRequestAdmin(linkAPI: link, completion: { (data) in
                         self.arrPer[j].soluong = data?[getResultAPI(link: API.DATA_RETURN)] as! Double
-                        //                                    let indexPath:IndexPath = IndexPath(item: j, section: 0)
-                        //                                    self.col.reloadItems(at: [indexPath])
-                        //                                    showLog(mess: self.arrPer[j])
-                        showLog(mess: "Start reload data")
-                        self.col.reloadData()
+                        let indexPath:IndexPath = IndexPath(item: j + 1, section: 0)
+                        self.col.reloadItems(at: [indexPath])
                     })
                 }
                 arrPer.append(quyen)

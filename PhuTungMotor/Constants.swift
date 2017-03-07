@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.102"
+let ip = "192.168.1.104"
 let domain = "http://\(ip)/phutungmoto"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"
@@ -45,6 +45,10 @@ enum API:String {
     case THONGTIN = "thongtin"
     case SUATHONGTIN = "suathongtin"
     case DATCAUHOI = "datcauhoi"
+    case NHANVIEN = "nhanvien"
+    case KHACHHANG = "tatcakhachhang"
+    case ACTIVE = "activeaccount"
+    case THEMNHANVIEN = "themnhanvien"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -116,6 +120,13 @@ enum ALERT:String {
     case ASKOK = "Gửi câu hỏi thành công, chúng tôi sẽ trả lời cho bạn sớm nhất có thể."
     case ASKNOK = "GỬI KHÔNG THÀNH CÔNG. BẠN HÃY THỬ LẠI SAU VÀI PHÚT NỮA"
     case NOLOGIN = "Bạn chưa đăng nhập"
+    case CHOOSEACCOUNT = "Bạn chọn vào loại tài khoản ?"
+    case NHANVIEN = "Nhân Viên"
+    case NOADDCUSTOMER = "Bạn không thể thêm khách hàng"
+    case DEACTIVEOK = "Tạm ngưng tài khoản: "
+    case ACTIVEOK = "Kích hoạt tài khoản: "
+    case ADDEMPLOYEEOK = "Thêm mới thành công account: "
+    
     func getAlertMessage() -> String{
         return self.rawValue
     }
@@ -155,6 +166,7 @@ enum UI:String {
     case LBL_SHOPPINGCART = "GIỎ HÀNG"
     case LBL_DONHANGNO = "ĐƠN HÀNG SỐ: "
     case LBL_CREATEDAT = "Ngày đặt:"
+    case LBL_CREATED = "Ngày tạo"
     case LBL_CACHTHANHTOAN = "Cách thanh toán:"
     case LBL_THANHTOAN = "Tình trạng:"
     case LBL_TONGTIEN = "Tổng tiền:"
@@ -182,6 +194,21 @@ enum UI:String {
     case LBL_MYASK = "CỦA TÔI"
     case LBL_ALLASK = "TẤT CẢ"
     case LBL_NOANSWER = "Chưa trả lời"
+    case LBL_EMPLOYEE = "DANH SÁCH NHÂN VIÊN"
+    case LBL_CUSTOMER = "DANH SÁCH KHÁCH HÀNG"
+    case LBL_PER = "Quyền"
+    case LBL_LOGIN = "Lần login"
+    case LBL_ADDEMPLOYEE = "THÊM NHÂN VIÊN"
+    case LBL_ROLE = "PHÂN QUYỀN"
+    case LBL_PERADMIN = "Admin:"
+    case LBL_PERACC = "Tài khoản:"
+    case LBL_PERDOANHNGHIEP = "Doanh nghiệp:"
+    case LBL_PERHOIDAP = "Hỏi đáp"
+    case LBL_PERTINTUC = "Tin tức"
+    case LBL_PERSENDMAIL = "Gửi Mail"
+    case LBL_PERSLIDER = "Slider"
+    case LBL_PERDONHANG = "Đơn Hàng"
+    case LBL_PERSANPHAM = "Sản phầm"
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -201,6 +228,7 @@ enum UI:String {
     case BTN_ASK = "ĐẶT CÂU HỎI"
     case BTN_POSTASK = "GỬI CÂU HỎI"
     case BTN_MYASK = "XEM CÂU HỎI CỦA TÔI"
+
     
     case DAY = "ngày trước"
     case HOUR = "giờ trước"
