@@ -14,14 +14,48 @@ class AdminController: MenuAdminController {
     var load = false // animation lan dau tien
     
     var arrPer: Array<Permission> = []
+    var chon:String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupDataPermission()
         col.delegate = self
         col.dataSource = self
         col.register(CellPermission.self, forCellWithReuseIdentifier: "CellPermission")
         col.register(CellBanner.self, forCellWithReuseIdentifier: "CellBanner")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if chon == "" || (chon != "Kết Quả" && chon != "Đơn hàng" && chon != "Hỏi đáp") {
+            setupDataPermission()
+            col.reloadData()
+        } else {
+            showLog(mess: "chon \(chon)")
+            if let index = arrPer.index(where: {$0.ten == chon}) {
+                var url = ""
+                switch arrPer[index].ten {
+                case "Kết Quả":
+                    paramAdmin["truycap"] = "0"
+                    url = getLinkAdminSer(link: API.DOANHTHU)
+                    break
+                case "Hỏi đáp":
+                    paramAdmin["truycap"] = "3"
+                    url = getLinkAdminSer(link: API.SOHOIDAP)
+                    break
+                default:
+                    paramAdmin["truycap"] = "9"
+                    url = getLinkAdminSer(link: API.SODONHANG)
+                    break
+                }
+                sendRequestAdmin(linkAPI: url, completion: { (data) in
+                    self.arrPer[index].soluong = data?[getResultAPI(link: API.DATA_RETURN)] as! Double
+                    let indexPath = IndexPath(item: index + 1, section: 0)
+                    self.col.reloadItems(at: [indexPath])
+                    showLog(mess: self.arrPer[index])
+                })
+            }
+            chon = ""
+        }
     }
     
     override func addMenuIcon() {
@@ -152,6 +186,7 @@ extension AdminController:UICollectionViewDelegate, UICollectionViewDataSource, 
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        chon = arrPer[indexPath.row - 1].ten
         let cell = collectionView.cellForItem(at: indexPath)
         UIView.animate(withDuration: 0.5, animations: {
             cell?.backgroundColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)

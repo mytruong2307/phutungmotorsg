@@ -476,23 +476,46 @@ class AddAccController: MenuAdminController {
             if isValidEmail(candidate: txtEmail.text!) {
                 if isValidPassword(candidate: txtMatKhau.text!) {
                     if txtMatKhau.text == txtReMatKhau.text {
-                        param["ten"] = txtName.text
-                        param["email"] = txtEmail.text
-                        param["pass"] = txtMatKhau .text
-                        param["quyen"] = getPermission()
-                        param["newToken"] = "1"
-                        param["truycap"] = "2"
-                        showLog(mess: param)
-                        sendRequestAdmin(linkAPI: API.THEMNHANVIEN, param: param, method: Method.post, extraLink: nil, completion: { (object) in
-                            if let _ = object?[getResultAPI(link: API.DATA_RETURN)] as? Dictionary<String, Any> { 
-                                let msg:String = getAlertMessage(msg: ALERT.ADDEMPLOYEEOK) + self.txtEmail.text!
-                                self.showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: msg)
-                            } else {
-                                if let mess = object?[getResultAPI(link: API.DATA_RETURN)] as? String {
-                                    self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: mess)
+                        let quyen = getPermission();
+                        if quyen == "" {
+                            showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.NOROLE))
+                        } else {
+                            param["ten"] = txtName.text
+                            param["email"] = txtEmail.text
+                            param["pass"] = txtMatKhau .text
+                            param["quyen"] = quyen
+                            param["newToken"] = "1"
+                            param["truycap"] = "2"
+                            showLog(mess: param)
+                            sendRequestAdmin(linkAPI: API.THEMNHANVIEN, param: param, method: Method.post, extraLink: nil, completion: { (object) in
+                                if let err = object?[getResultAPI(link: API.DATA_ERR)] as? Int {
+                                    showLog(mess: "Err nhan duoc: \(err)")
+                                    switch err {
+                                    case 0:
+                                        if let mess = object?[getResultAPI(link: API.DATA_RETURN)] as? String {
+                                            self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: mess)
+                                        }
+                                        break
+                                    case 1:
+                                        self.showAlertAction(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CUSTOMERTOEMPLOYEE), complete: {
+                                            if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Dictionary<String, Any> {
+                                                let extra = "\(data["id"] as! Int)"
+                                                param["token"] = paramAdmin["token"]
+                                                self.changeCustomerToEmployee(param: param, extra: extra)
+                                            }
+                                        })
+                                        break
+                                    default:
+                                        let msg:String = getAlertMessage(msg: ALERT.ADDEMPLOYEEOK) + self.txtEmail.text!
+                                        let tem = getAlertMessage(msg: ALERT.ACTIVEACC)
+                                        self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: msg + tem, complete: {
+                                            let _ = self.navigationController?.popViewController(animated: true)
+                                        })
+                                        break
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     } else {
                         showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.PASSNOTMATCH))
                     }
@@ -507,6 +530,32 @@ class AddAccController: MenuAdminController {
         
         
         
+    }
+    
+    func changeCustomerToEmployee(param:Dictionary<String,String>, extra:String)  {
+        self.sendRequestAdmin(linkAPI: API.CHUYENNHANVIEN, param: param, method: Method.post, extraLink: extra, completion: { (object) in
+            if let err = object?[getResultAPI(link: API.DATA_ERR)] as? Int {
+                switch err {
+                case 0:
+                    if let mess = object?[getResultAPI(link: API.DATA_RETURN)] as? String {
+                        self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: mess)
+                    }
+                    break
+                case 1:
+                    if let mess = object?[getResultAPI(link: API.DATA_RETURN)] as? String {
+                        self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: mess)
+                        let _ = self.navigationController?.popViewController(animated: true)
+                    }
+                    break
+                default:
+                    let msg:String = getAlertMessage(msg: ALERT.ADDEMPLOYEEOK) + self.txtEmail.text!
+                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: msg, complete: {
+                        let _ = self.navigationController?.popViewController(animated: true)
+                    })
+                    break
+                }
+            }
+        })
     }
     
     func capQuyen(_ sender:UISwitch){

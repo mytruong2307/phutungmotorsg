@@ -38,7 +38,7 @@ struct NhanVien {
         self.gioitinh = ""
         self.maxacnhan = ""
         self.quyen = ""
-        self.lanlogin = 0
+        self.lanlogin = -1
         self.tinhtrang = 0
         self.createdAt = ""
     }

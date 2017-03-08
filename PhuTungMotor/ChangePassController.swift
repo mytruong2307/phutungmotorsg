@@ -26,6 +26,7 @@ class ChangePassController: BaseController {
         return v
     }()
     var top:NSLayoutConstraint!
+    var isFirstLogin:String = "0" // 1 lan dau login yeu cau doi pass, 0: Login binfh thuong
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +38,12 @@ class ChangePassController: BaseController {
     
     override func addHomeIcon() {
         //Huy home menu
+        showLog(mess: "addHomeIcon: \(isFirstLogin)")
+        if isFirstLogin == "1" {
+            navigationItem.hidesBackButton = true
+        }
     }
+    
     
     func show(_ notification:NSNotification)
     {
@@ -127,19 +133,26 @@ class ChangePassController: BaseController {
     }
     
     func changePass()  {
+        if isFirstLogin == "1" && txtMatKhauCu.text == txtMatKhau.text {
+            showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.MUSTCHANGE))
+        } else {
         let check = isEmptyTextField(txt: txtEmail, txtMatKhau)
         if check == "OK" {
             if isValidEmail(candidate: txtEmail.text!) {
                 if isValidPassword(candidate: txtMatKhau.text!) {
                     if txtMatKhau.text == txtReMatKhau.text {
-                        let param = ["email":txtEmail.text!,"oldpass":txtMatKhauCu.text!,"newpass":txtMatKhau.text!]
+                        let param = ["email":txtEmail.text!,"oldpass":txtMatKhauCu.text!,"newpass":txtMatKhau.text!, "login":isFirstLogin]
                         sendRequestToServer(linkAPI: API.CHANGEPASS, param: param, method: .post, extraLink: nil, completion: { (data) in
                             if data?[getResultAPI(link: API.DATA_RES)] as! String != getResultAPI(link: API.RES_OK) {
                                 self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
                             } else {
                                 self.showAlertActionOK(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHANGEPASSOK), complete: {
                                     showLog(mess: kh!)
-                                    _ = self.navigationController?.popToRootViewController(animated: true)
+                                    if self.isFirstLogin == "1" {
+                                        self.navigationController?.pushViewController(AdminController(), animated: true)
+                                    } else {
+                                        _ = self.navigationController?.popToRootViewController(animated: true)
+                                    }
                                 })
                             }
                         })
@@ -154,6 +167,7 @@ class ChangePassController: BaseController {
             }
         } else {
             self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: check)
+        }
         }
     }
 }

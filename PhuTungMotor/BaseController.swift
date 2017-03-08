@@ -22,7 +22,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
     var isOpenMenu:Bool = false
     
     var center:NSLayoutConstraint!
-
+    
     
     let uvMenu:UIView = {
         let v = UIView()
@@ -82,7 +82,6 @@ class BaseController: UIViewController, UISearchBarDelegate {
     let searchBar:UISearchBar = {
         let v = UISearchBar()
         v.showsCancelButton = true
-        v.placeholder = getTextUI(ui: UI.SERBAR)
         return v
     }()
     
@@ -99,7 +98,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
     }()
     
     var cartBtn:UIBarButtonItem!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
@@ -112,9 +111,12 @@ class BaseController: UIViewController, UISearchBarDelegate {
     override func viewDidAppear(_ animated: Bool) {
         let totalAmount = gioHang.reduce(0) {$0 + $1.soluong}
         lblCart.text = String (totalAmount)
+        if kh != nil {
+            showLog(mess: kh!.quyen)
+        }
         setupDataMenu()
         tbl.reloadData()
-        UIView.animate(withDuration: 0.5) { 
+        UIView.animate(withDuration: 0.5) {
             self.navigationController?.navigationBar.layer.transform = CATransform3DIdentity
             self.uvMain.layer.transform = CATransform3DIdentity
         }
@@ -165,13 +167,19 @@ class BaseController: UIViewController, UISearchBarDelegate {
         
     }
     func search() {
+        setTitleSearchBar()
         navigationItem.titleView = searchBar
         searchBar.delegate = self
         navigationItem.leftBarButtonItems = []
         navigationItem.rightBarButtonItems = []
     }
     
+    func setTitleSearchBar()  {
+        searchBar.placeholder = getTextUI(ui: UI.SERBAR)
+    }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
         navigationItem.titleView = bn
         setupNavigationBar()
     }
@@ -183,7 +191,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
     }
     
     func setupDataMenu() {
-        if user.object(forKey: "email") != nil {
+        if user.object(forKey: "email") != nil && kh == nil{
             let dic = user.object(forKey: "email") as! Dictionary<String,Any>
             kh = KhachHang(khachhang: dic)
         }
@@ -191,8 +199,13 @@ class BaseController: UIViewController, UISearchBarDelegate {
             arrMenu = [["Đăng ký","Đăng nhập"],["Trang chủ","Tin tức","Hỏi đáp"]]
             arrIcon = [[#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "login")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq")]]
         } else {
-            arrMenu = [["Đăng xuất","Đổi mật khẩu","Cập nhật thông tin"],["Trang chủ","Tin tức","Hỏi đáp","Đơn hàng"]]
-            arrIcon = [[#imageLiteral(resourceName: "Logout"),#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "Contacts")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq"),#imageLiteral(resourceName: "List")]]
+            if kh?.quyen.count == 0 {
+                arrMenu = [["Đăng xuất","Đổi mật khẩu","Cập nhật thông tin"],["Trang chủ","Tin tức","Hỏi đáp","Đơn hàng"]]
+                arrIcon = [[#imageLiteral(resourceName: "Logout"),#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "Contacts")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq"),#imageLiteral(resourceName: "List")]]
+            } else {
+                arrMenu = [["Đăng xuất","Đổi mật khẩu","Cập nhật thông tin"],["Trang chủ","Tin tức","Hỏi đáp","Đơn hàng","Quản Trị"]]
+                arrIcon = [[#imageLiteral(resourceName: "Logout"),#imageLiteral(resourceName: "key"),#imageLiteral(resourceName: "Contacts")],[#imageLiteral(resourceName: "Home"),#imageLiteral(resourceName: "new"),#imageLiteral(resourceName: "faq"),#imageLiteral(resourceName: "List"), #imageLiteral(resourceName: "admin")]]
+            }
         }
     }
     
@@ -219,7 +232,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
     }
     
     func setupMainScreen() {
-        //Gan view        
+        //Gan view
         view.addSubview(uvMain)
         view.addContraintByVSF(VSF: "H:|[v0]|", views: uvMain)
         view.addContraintByVSF(VSF: "V:|-64-[v0]|", views: uvMain)
@@ -279,7 +292,7 @@ class BaseController: UIViewController, UISearchBarDelegate {
         UIView.animate(withDuration: 1) {
             if !self.isOpenMenu {
                 let dichuyen = CATransform3DTranslate(CATransform3DIdentity, UIScreen.main.bounds.width * 0.75, 0, 0)
-                UIView.animate(withDuration: 0, animations: { 
+                UIView.animate(withDuration: 0, animations: {
                     self.navigationController?.navigationBar.layer.transform = dichuyen
                     self.uvMain.layer.transform = dichuyen
                 })
@@ -320,11 +333,11 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
         uv.addContraintByVSF(VSF: "V:|-13-[v0]", views: lbl)
         return uv
     }
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 45
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         UIView.animate(withDuration: 0.5, animations: {
             self.openMenu()
@@ -353,11 +366,9 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
                             let _ = self.navigationController?.popToRootViewController(animated: true)
                         }
                     } else if indexPath.row == 1 {
-                        let scr = ChangePassController()
-                        self.navigationController?.pushViewController(scr, animated: true)
+                        self.navigationController?.pushViewController(ChangePassController(), animated: true)
                     } else if indexPath.row == 2 {
-                        let scr = UpdateInfoController()
-                        self.navigationController?.pushViewController(scr, animated: true)
+                        self.navigationController?.pushViewController(UpdateInfoController(), animated: true)
                     }
                 }
                 break
@@ -372,17 +383,29 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
                 case 2:
                     self.navigationController?.pushViewController(HoiDapController(), animated: true)
                     break
-                default:
+                case 3:
                     self.navigationController?.pushViewController(DonHangController(), animated: true)
+                    break
+                default:
+                    //Lay token truoc khi chuyen
+
+                    sendRequestNoLoading(linkAPI: API.TOKEN, param: nil, method: .get, extraLink: "\(kh!.email)", completion: { (object) in
+                        paramAdmin["token"] = object?["data"] as? String
+                        paramAdmin["newToken"] = "0"
+                        paramAdmin["truycap"] = "2"
+                        showLog(mess: paramAdmin)
+                        self.navigationController?.pushViewController(AdminController(), animated: true)
+                    })
+//                    self.navigationController?.pushViewController(AdminController(), animated: true)
                     break
                 }
                 break
             }
-
+            
         }
         
     }
-
+    
 }
 
 

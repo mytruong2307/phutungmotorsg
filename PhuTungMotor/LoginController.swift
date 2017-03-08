@@ -102,7 +102,7 @@ class LoginController: BaseController {
             uvFormBase.addContraintByVSF(VSF: "H:|-20-[v0]-20-|", views: view)
         }
         uvFormBase.addContraintByVSF(VSF: "V:|[v0(70)][v1(21)]-4-[v2(30)]-20-[v3(21)]-4-[v4(30)]-20-[v5(30)]-20-[v6(30)]-10-[v7(30)]-10-[v8(30)]-20-|", views: arrView)
-    
+        
         
         btnLogin.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
         btnRegister.addTarget(self, action: #selector(LoginController.actionButton(_:)), for: UIControlEvents.touchUpInside)
@@ -133,7 +133,7 @@ class LoginController: BaseController {
             self.view.layoutSubviews()
         }
     }
-
+    
     
     func ghiNhoLogin(_ sender:UISwitch) {
         remember = sender.isOn
@@ -154,7 +154,13 @@ class LoginController: BaseController {
                                 self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: data?[getResultAPI(link: API.DATA_ERR)] as! String)
                             } else {
                                 //Login OK
-                                let dic = data?["data"] as! Dictionary<String,Any>
+                                var dic = data?["data"] as! Dictionary<String,Any>
+                                //Them quyen vao KH truong hop muon dung luu mat khau
+                                if let quyen = data?["quyen"] as? Array<String> {
+                                    dic["quyen"] = quyen
+                                }
+                                
+                                
                                 kh = KhachHang(khachhang: dic)
                                 if let token = data?["token"] as? String {
                                     paramAdmin["token"] = token
@@ -166,14 +172,22 @@ class LoginController: BaseController {
                                     user.setValue(dic, forKey: "email")
                                     user.synchronize()
                                 }
-                                if let quyen = data?["quyen"] as? Array<String> {
-                                    kh?.quyen = quyen
-                                    self.showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.ADMIN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: {
-                                        self.navigationController?.pushViewController(AdminController(), animated: true)
-                                    }, actionB: {
-                                        self.changePageKhachHang()
-                                    })
-                                } else {
+                                if let nv = data?["nv"] as? Dictionary<String,Any> {
+//                                    Them quyen vao KH truong hop muon khong luu mat khau
+//                                    kh?.quyen = data?["quyen"] as! Array<String>
+                                    if nv["lanlogin"] as! Int == 1 {
+                                        let scr = ChangePassController()
+                                        scr.isFirstLogin = "1"
+                                        self.navigationController?.pushViewController(scr, animated: true)
+                                    } else {
+                                        self.showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.ADMIN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: {
+                                            self.navigationController?.pushViewController(AdminController(), animated: true)
+                                        }, actionB: {
+                                            self.changePageKhachHang()
+                                        })
+                                    }
+                                }
+                                else {
                                     self.changePageKhachHang()
                                 }
                                 

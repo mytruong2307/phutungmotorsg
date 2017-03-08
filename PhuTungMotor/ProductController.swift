@@ -48,10 +48,12 @@ class ProductController: BaseController {
     
     func viewMoreProduct(object:Notification)  {
         let lx = object.object as! LoaiXe
-        if let t = arrLoaiXe.index(where: { $0.id == lx.id }) {
-            showProduct(loaixe: lx, pos: t)
-        } else {
-            showProduct(loaixe: lx, pos: 0)
+        if lx.hinh != "" {
+            if let t = arrLoaiXe.index(where: { $0.id == lx.id }) {
+                showProduct(loaixe: lx, pos: t)
+            } else {
+                showProduct(loaixe: lx, pos: 0)
+            }
         }
     }
     

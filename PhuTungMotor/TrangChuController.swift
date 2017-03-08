@@ -16,7 +16,6 @@ class TrangChuController: ProductController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         colSanPham.register(CellSanPham.self, forCellWithReuseIdentifier: "CellSanPham")
         colSanPham.register(CellBanner.self, forCellWithReuseIdentifier: "CellBanner")
         colSanPham.register(HeaderSanPham.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "header")

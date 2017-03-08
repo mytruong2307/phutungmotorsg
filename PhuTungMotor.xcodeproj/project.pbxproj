@@ -10,6 +10,7 @@
 		0D4CF643F1CEBDD5EDC7E399 /* Pods_PhuTungMotor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 236C21CB9223DBA7315C97A2 /* Pods_PhuTungMotor.framework */; };
 		8441CE271E5DB81C00B95A39 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8441CE261E5DB81C00B95A39 /* SearchController.swift */; };
 		8447F7721E4DB2C900B21A19 /* TrangChuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8447F7711E4DB2C900B21A19 /* TrangChuController.swift */; };
+		84681EFE1E6EDF30005BB939 /* HoiDapAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84681EFD1E6EDF30005BB939 /* HoiDapAdController.swift */; };
 		846906E81E6ACA1700B40713 /* TaiKhoanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846906E71E6ACA1700B40713 /* TaiKhoanController.swift */; };
 		846906EA1E6AD23900B40713 /* NhanVien.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846906E91E6AD23900B40713 /* NhanVien.swift */; };
 		846906EC1E6AD7A000B40713 /* CellTaiKhoan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846906EB1E6AD7A000B40713 /* CellTaiKhoan.swift */; };
@@ -24,6 +25,8 @@
 		847E4CD81E5C235900B84FFF /* ChiTietDHController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */; };
 		847E4CDA1E5C297B00B84FFF /* CellProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847E4CD91E5C297B00B84FFF /* CellProduct.swift */; };
 		848607F11E6C062600C9DE02 /* AddAccController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848607F01E6C062600C9DE02 /* AddAccController.swift */; };
+		8486DE311E6FA1AB00830AF8 /* LstHoiDapAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */; };
+		8486DE331E6FBC9F00830AF8 /* TraLoiHoiDapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */; };
 		8486E19F1E6034320085782D /* ListPerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486E19E1E6034320085782D /* ListPerController.swift */; };
 		8486E1A11E6035B60085782D /* MenuAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486E1A01E6035B60085782D /* MenuAdminController.swift */; };
 		8487274A1E1A8C3F008D3F0E /* TinTucController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848727491E1A8C3F008D3F0E /* TinTucController.swift */; };
@@ -32,6 +35,7 @@
 		848727501E1A975F008D3F0E /* BaseCollectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8487274F1E1A975F008D3F0E /* BaseCollectCell.swift */; };
 		848945381E4C782000B2C873 /* CustomBGSectionColletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848945371E4C782000B2C873 /* CustomBGSectionColletionView.swift */; };
 		848991221E1BA5D80005CC7B /* TinTucDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848991211E1BA5D80005CC7B /* TinTucDetailController.swift */; };
+		848C90001E7013F500AE4E24 /* XacNhanHDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848C8FFF1E7013F500AE4E24 /* XacNhanHDController.swift */; };
 		848E27B01E59D12D00B5A5E5 /* CellSumShopping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848E27AF1E59D12D00B5A5E5 /* CellSumShopping.swift */; };
 		8490FE481E5ED8BB001BE617 /* CellPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8490FE471E5ED8BB001BE617 /* CellPermission.swift */; };
 		8490FE4C1E5EF68D001BE617 /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8490FE4B1E5EF68D001BE617 /* Permission.swift */; };
@@ -79,6 +83,7 @@
 		236C21CB9223DBA7315C97A2 /* Pods_PhuTungMotor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhuTungMotor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8441CE261E5DB81C00B95A39 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		8447F7711E4DB2C900B21A19 /* TrangChuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrangChuController.swift; sourceTree = "<group>"; };
+		84681EFD1E6EDF30005BB939 /* HoiDapAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HoiDapAdController.swift; sourceTree = "<group>"; };
 		846906E71E6ACA1700B40713 /* TaiKhoanController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaiKhoanController.swift; sourceTree = "<group>"; };
 		846906E91E6AD23900B40713 /* NhanVien.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NhanVien.swift; sourceTree = "<group>"; };
 		846906EB1E6AD7A000B40713 /* CellTaiKhoan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellTaiKhoan.swift; sourceTree = "<group>"; };
@@ -93,6 +98,8 @@
 		847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChiTietDHController.swift; sourceTree = "<group>"; };
 		847E4CD91E5C297B00B84FFF /* CellProduct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellProduct.swift; sourceTree = "<group>"; };
 		848607F01E6C062600C9DE02 /* AddAccController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddAccController.swift; sourceTree = "<group>"; };
+		8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LstHoiDapAdController.swift; sourceTree = "<group>"; };
+		8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TraLoiHoiDapController.swift; sourceTree = "<group>"; };
 		8486E19E1E6034320085782D /* ListPerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListPerController.swift; sourceTree = "<group>"; };
 		8486E1A01E6035B60085782D /* MenuAdminController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuAdminController.swift; sourceTree = "<group>"; };
 		848727491E1A8C3F008D3F0E /* TinTucController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinTucController.swift; sourceTree = "<group>"; };
@@ -101,6 +108,7 @@
 		8487274F1E1A975F008D3F0E /* BaseCollectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectCell.swift; sourceTree = "<group>"; };
 		848945371E4C782000B2C873 /* CustomBGSectionColletionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomBGSectionColletionView.swift; sourceTree = "<group>"; };
 		848991211E1BA5D80005CC7B /* TinTucDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinTucDetailController.swift; sourceTree = "<group>"; };
+		848C8FFF1E7013F500AE4E24 /* XacNhanHDController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XacNhanHDController.swift; sourceTree = "<group>"; };
 		848E27AF1E59D12D00B5A5E5 /* CellSumShopping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellSumShopping.swift; sourceTree = "<group>"; };
 		8490FE471E5ED8BB001BE617 /* CellPermission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellPermission.swift; sourceTree = "<group>"; };
 		8490FE4B1E5EF68D001BE617 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
@@ -182,6 +190,10 @@
 				847BE3C81E6085CB00D96F88 /* SuaDNController.swift */,
 				846906E71E6ACA1700B40713 /* TaiKhoanController.swift */,
 				848607F01E6C062600C9DE02 /* AddAccController.swift */,
+				84681EFD1E6EDF30005BB939 /* HoiDapAdController.swift */,
+				8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */,
+				8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */,
+				848C8FFF1E7013F500AE4E24 /* XacNhanHDController.swift */,
 			);
 			name = Admin;
 			sourceTree = "<group>";
@@ -470,6 +482,7 @@
 				84A9969B1E4D5A2300FBFE86 /* CellBanner.swift in Sources */,
 				848991221E1BA5D80005CC7B /* TinTucDetailController.swift in Sources */,
 				84A9969F1E4D608000FBFE86 /* LoaiXeController.swift in Sources */,
+				848C90001E7013F500AE4E24 /* XacNhanHDController.swift in Sources */,
 				847640451E58573B0053EA9C /* ShoppingController.swift in Sources */,
 				8490FE4C1E5EF68D001BE617 /* Permission.swift in Sources */,
 				848607F11E6C062600C9DE02 /* AddAccController.swift in Sources */,
@@ -483,6 +496,7 @@
 				848727501E1A975F008D3F0E /* BaseCollectCell.swift in Sources */,
 				846AEF0C1E5B3134000805C9 /* CellDonHang.swift in Sources */,
 				848E27B01E59D12D00B5A5E5 /* CellSumShopping.swift in Sources */,
+				8486DE331E6FBC9F00830AF8 /* TraLoiHoiDapController.swift in Sources */,
 				84E8DBCF1E5FD2EC00636E26 /* CellPhanQuyen.swift in Sources */,
 				8487274C1E1A8EE8008D3F0E /* TinTuc.swift in Sources */,
 				84B03A161E18A0CD0030B767 /* CellMenu.swift in Sources */,
@@ -502,6 +516,7 @@
 				847BE3C91E6085CB00D96F88 /* SuaDNController.swift in Sources */,
 				84FAEEEE1E0CD22400745B1D /* AppDelegate.swift in Sources */,
 				8487274A1E1A8C3F008D3F0E /* TinTucController.swift in Sources */,
+				8486DE311E6FA1AB00830AF8 /* LstHoiDapAdController.swift in Sources */,
 				846AEF0A1E5B2DFE000805C9 /* DonHang.swift in Sources */,
 				84B03A0E1E189FD80030B767 /* LoaiXe.swift in Sources */,
 				8478A0811E1F9437001919E8 /* HoiDap.swift in Sources */,
@@ -513,6 +528,7 @@
 				84A43E751E559A1700764564 /* ProductDetailController.swift in Sources */,
 				848945381E4C782000B2C873 /* CustomBGSectionColletionView.swift in Sources */,
 				8492EFBB1E0CD9B0005D58D4 /* AppStyle.swift in Sources */,
+				84681EFE1E6EDF30005BB939 /* HoiDapAdController.swift in Sources */,
 				847640471E5858360053EA9C /* CellShopping.swift in Sources */,
 				847E4CDA1E5C297B00B84FFF /* CellProduct.swift in Sources */,
 				84BDBAD21E5993380082D571 /* FooterShopping.swift in Sources */,

@@ -259,7 +259,7 @@ class CellTaiKhoan: BaseCollectCell {
         lblDGender.text = nv.gioitinh
         lblDBikeType.text = nv.xedangdung
         lblDCreatedAt.text = nv.createdAt
-        if nv.lanlogin > 0 {
+        if nv.lanlogin > -1 {
             lblDLogin.text = String (nv.lanlogin)
             // Switch active
             if nv.tinhtrang == 0 {

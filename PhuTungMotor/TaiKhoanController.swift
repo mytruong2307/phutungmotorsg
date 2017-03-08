@@ -13,6 +13,7 @@ class TaiKhoanController: MenuAdminController {
     
     var arrNhanVien:Array<NhanVien> = []
     var isEmployee = true
+    var isSearch = false
     var item = 2
     var page = 1
     
@@ -52,9 +53,6 @@ class TaiKhoanController: MenuAdminController {
     }
     override func addForm() {
         uvMain.addViewFullScreen(views: col)
-        //        uvMain.addSubview(col)
-        //        uvMain.addContraintByVSF(VSF: "H:|-10-[v0]-10-|", views: col)
-        //        uvMain.addContraintByVSF(VSF: "V:|[v0]|", views: col)
     }
     
     func setupDataCol()  {
@@ -92,12 +90,57 @@ class TaiKhoanController: MenuAdminController {
             })
         }
         
-    }    
+    }
     override func them() {
         if isEmployee {
             navigationController?.pushViewController(AddAccController(), animated: true)
         } else {
             showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.NOADDCUSTOMER))
+        }
+    }
+    
+    override func setTitleSearchBar() {
+        searchBar.placeholder = getTextUI(ui: UI.ACCSEARCH)
+    }
+    
+    override func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        super.searchBarCancelButtonClicked(searchBar)
+        isSearch = false
+    }
+    
+    override func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text != "" {
+            arrNhanVien.removeAll()
+            col.reloadData()
+            isSearch = true
+            page = 1
+            downloadSearch()
+        }
+    }
+    
+    func downloadSearch()  {
+        showLog(mess: "Keyword: \(searchBar.text)")
+        var param = paramAdmin
+        param["keyword"] = searchBar.text
+        param["page"] = "\(page)"
+        param["item"] = "\(item)"
+        if isEmployee {
+            param["acc"] = "1"
+        } else {
+            param["acc"] = "0"
+        }
+        sendRequestAdmin(linkAPI: API.SEARCHACC, param: param, method: Method.post, extraLink: nil) { (object) in
+            if let data = object?[getResultAPI(link: API.DATA_RETURN)] as? Array<Dictionary<String,Any>>
+            {
+                for nv in data {
+                    self.arrNhanVien.append(NhanVien(dic: nv))
+                    showLog(mess: self.arrNhanVien)
+                }
+                self.page += 1
+                self.col.reloadData()
+            } else {
+                self.page = -1
+            }
         }
     }
 }
@@ -123,9 +166,7 @@ extension TaiKhoanController:UICollectionViewDelegate, UICollectionViewDataSourc
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellTaiKhoan", for: indexPath) as! CellTaiKhoan
             cell.nv = arrNhanVien[indexPath.row - 1]
             return cell
-            
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -153,7 +194,11 @@ extension TaiKhoanController:UICollectionViewDelegate, UICollectionViewDataSourc
             showLog(mess: page)
             if scrollView.contentOffset.y == x && page > 0
             {
-                setupDataCol()
+                if isSearch {
+                    downloadSearch()
+                } else {
+                    setupDataCol()
+                }
             }
         } else {
             let x = 200 + CGFloat(arrNhanVien.count) * (160 + 3) - scrollView.frame.height
@@ -162,7 +207,11 @@ extension TaiKhoanController:UICollectionViewDelegate, UICollectionViewDataSourc
             showLog(mess: page)
             if scrollView.contentOffset.y == x && page > 0
             {
-                setupDataCol()
+                if isSearch {
+                    downloadSearch()
+                } else {
+                    setupDataCol()
+                }
             }
         }
         

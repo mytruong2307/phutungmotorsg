@@ -103,7 +103,7 @@ class HoiDapController: BaseController {
                             self.flagMy = false
                         }
                     } else {
-                        self.flagMy = false                        
+                        self.flagMy = false
                     }
                     self.collectHoiDap.reloadData()
                 })
@@ -131,6 +131,7 @@ class HoiDapController: BaseController {
         collectHoiDap.delegate = self
         collectHoiDap.dataSource = self
         collectHoiDap.register(CellHoiDap.self, forCellWithReuseIdentifier: "Cell")
+        collectHoiDap.register(CellBanner.self, forCellWithReuseIdentifier: "CellBanner")
         
         vTemp.addSubview(lblAction)
         vTemp.addSubview(btnAction)
@@ -157,11 +158,17 @@ class HoiDapController: BaseController {
                 showLog(mess: arrHoiDap.count)
                 page = arrMySelf.count / numberItem + 1
                 loadData()
+                flagMy = true
+                flag = false
             } else {
+                flagMy = false
+                flag = true
                 btnAction.selectedSegmentIndex = 1
                 showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.NOLOGIN))
             }
         } else {
+            flagMy = false
+            flag = true
             arrHoiDap = arrAll
             page = arrAll.count / numberItem + 1
             loadData()
@@ -173,18 +180,30 @@ class HoiDapController: BaseController {
 extension HoiDapController:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrHoiDap.count
+        return arrHoiDap.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CellHoiDap
-        cell.hoidap = arrHoiDap[indexPath.row]
-        cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        return cell
+        if indexPath.row == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellBanner", for: indexPath) as! CellBanner
+            cell.image = #imageLiteral(resourceName: "question")
+            cell.title =  getTextUI(ui: UI.LBL_LSTHOIDAP)
+            cell.isSelected = false
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CellHoiDap
+            cell.hoidap = arrHoiDap[indexPath.row - 1]
+            cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            return cell
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width, height: 90)
+        if indexPath.row == 0 {
+            return CGSize(width: collectionView.frame.width, height: 200)
+        } else {
+            return CGSize(width: collectionView.frame.width, height: 90)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -192,7 +211,7 @@ extension HoiDapController:UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if flag && posLoaded < indexPath.row {
+        if (flag || flagMy) && posLoaded < indexPath.row {
             posLoaded = indexPath.row
             let dichuyen = CATransform3DTranslate(CATransform3DIdentity, 500, 0, 0)
             cell.layer.transform = dichuyen
@@ -202,7 +221,6 @@ extension HoiDapController:UICollectionViewDelegate, UICollectionViewDataSource,
         }
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let scr = HoiDapDetailController()
         scr.hoidap = arrHoiDap[indexPath.row]
@@ -210,9 +228,12 @@ extension HoiDapController:UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if offsetY > contentHeight - scrollView.frame.size.height {
+        let x = 200 + CGFloat(arrHoiDap.count) * (90 + 1) - scrollView.frame.height
+        showLog(mess: scrollView.contentOffset.y)
+        showLog(mess: x)
+        showLog(mess: page)
+        if scrollView.contentOffset.y == x && (flag || flagMy)
+        {
             loadData()
         }
     }

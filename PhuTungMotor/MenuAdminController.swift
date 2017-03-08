@@ -95,7 +95,7 @@ class MenuAdminController: BaseController {
             
             break
         case "Hỏi đáp":
-            
+            navigationController?.pushViewController(HoiDapAdController(), animated: true)
             break
         case "Tài khoản":
             showAlert2Action(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.CHOOSEACCOUNT), btnATitle: getAlertMessage(msg: ALERT.NHANVIEN), btnBTitle: getAlertMessage(msg: ALERT.KHACHHANG), actionA: { 

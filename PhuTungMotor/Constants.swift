@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.104"
+let ip = "192.168.1.102"
 let domain = "http://\(ip)/phutungmoto"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"
@@ -49,6 +49,10 @@ enum API:String {
     case KHACHHANG = "tatcakhachhang"
     case ACTIVE = "activeaccount"
     case THEMNHANVIEN = "themnhanvien"
+    case CHUYENNHANVIEN = "chuyennhanvien"
+    case SEARCHACC = "timkiemtaikhoan"
+    case TOKEN = "getToken"
+    case TRALOI = "traloi"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -125,7 +129,20 @@ enum ALERT:String {
     case NOADDCUSTOMER = "Bạn không thể thêm khách hàng"
     case DEACTIVEOK = "Tạm ngưng tài khoản: "
     case ACTIVEOK = "Kích hoạt tài khoản: "
-    case ADDEMPLOYEEOK = "Thêm mới thành công account: "
+    case ADDEMPLOYEEOK = "Thêm mới thành công. Check mail "
+    case CUSTOMERTOEMPLOYEE = "User này là khách hàng, bạn muốn tạo Account nhân viên cho user này kh?"
+    case ACTIVEACC = " để kích hoạt tài khoản."
+    case MUSTCHANGE = "Đây là lần đầu tiên login. Mật khẩu củ và mới trùng nhau. Bạn phải thay đổi mật khẩu"
+    case NOROLE = "Bạn chưa cấp quyền cho account mới."
+    case OKANSWER = "Bạn đã gửi câu trả lời thành công. Đợi Admin xác nhận."
+    case ANSWER = "Bạn có chắc gửi cấu trả lời này để admin duyệt không?"
+    case SUACAUTRALOI = "Sửa trả lời"
+    case VIEWHOIDAP = "Xem câu hỏi"
+    case ENTERGHICHU = "Bạn cần nhập ghi chú để từ chối câu trả lời"
+    case DENY = "Bạn từ chối câu trả lời này?"
+    case OKDENY = "Bạn từ chối thành công, câu hỏi cần có câu trả lời mới."
+    case CONFIRM = "Câu trả lời sẽ được khách hàng nhìn thầy. Bạn xác nhận câu trả lời?"
+    case OKCONFIRM = "Xác nhận thành công"
     
     func getAlertMessage() -> String{
         return self.rawValue
@@ -209,6 +226,13 @@ enum UI:String {
     case LBL_PERSLIDER = "Slider"
     case LBL_PERDONHANG = "Đơn Hàng"
     case LBL_PERSANPHAM = "Sản phầm"
+    case LBL_LSTHOIDAP = "DANH SÁCH CÂU HỎI"
+    case LBL_LIST = "DANH SÁCH "
+    case LBL_CAUHOI = "Câu hỏi:"
+    case LBL_TRALOI = "Trả lời:"
+    case LBL_ANSWER = "TRẢ LỜI CÂU HỎI"
+    case LBL_NGUOIHOI = "Người hỏi: "
+    case LBL_ISDONG = "Đóng câu hỏi: "
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -228,14 +252,22 @@ enum UI:String {
     case BTN_ASK = "ĐẶT CÂU HỎI"
     case BTN_POSTASK = "GỬI CÂU HỎI"
     case BTN_MYASK = "XEM CÂU HỎI CỦA TÔI"
-
+    case BTN_ANSWER = "TRẢ LỜI"
+    case BTN_DENY = "TỪ CHỐI"
+    case BTN_XACNHAN = "XÁC NHẬN"
     
     case DAY = "ngày trước"
     case HOUR = "giờ trước"
     case MINUTE = "phút trước"
     case NOW = "Vừa xong"
     
+    case CHUATRALOI = "CHƯA TRẢ LỜI"
+    case CHUAXACNHAN = "CHƯA XÁC NHẬN"
+    case CHUADONG = "CHƯA ĐÓNG"
+    case DADONG = "ĐÃ ĐÓNG"
+    
     case SERBAR = "Tìm theo tên sản phẩm"
+    case ACCSEARCH = "Tìm theo tên hoặc email"
     
     func getText() -> String {
         return self.rawValue

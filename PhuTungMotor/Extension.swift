@@ -292,7 +292,8 @@ extension UIViewController
     {
         var result = "OK"
         for i in 0...txt.count - 1 {
-            if txt[i].text == "" {
+            let text = txt[i].text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            if text == "" {
                 result = getAlertMessage(msg: ALERT.EMPTYTEXTFIELD)
                 txt[i].becomeFirstResponder()
                 break
@@ -563,17 +564,18 @@ extension UIViewController
         session.dataTask(with: request) { (data, res, err) in
             if err == nil {
                 do {
-                    showLog(mess: data!)
                     let object = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
                     if let data = object as? Dictionary<String,Any> {
                         DispatchQueue.main.async {
-                            
+                            showLog(mess: data)
                             let res = data[getResultAPI(link: API.DATA_RES)] as! String
                             if res == getResultAPI(link: API.RES_OK) {
-                                let nv = data["nv"] as! Dictionary<String,Any>
-                                let email = nv["email"] as! String
+                                let nhanvien = data["nv"] as! Dictionary<String,Any>
+                                let email = nhanvien["email"] as! String
+                                showLog(mess: email)
+                                showLog(mess: kh!.email)
                                 if email == kh?.email {
-                                    paramAdmin["token"] = nv["maxacnhan"] as? String
+                                    paramAdmin["token"] = nhanvien["maxacnhan"] as? String
                                     if paramAdmin["newToken"] == "1" {
                                         paramAdmin["newToken"] = "0"
                                     }
@@ -813,6 +815,49 @@ extension UIViewController
         }.resume()
     }
 
+    func actionHoiDap(hd:HoiDap) {
+        switch hd.trangthai {
+        case 0:
+            let scr = TraLoiHoiDapController()
+            scr.hoiDap = hd
+            navigationController?.pushViewController(scr, animated: true)
+            break
+        case 1:
+            if paramAdmin["quyen"] == "1" || paramAdmin["quyen"] == "10" {
+                let scr = XacNhanHDController()
+                scr.hoiDap = hd
+                self.navigationController?.pushViewController(scr, animated: true)
+            } else {
+                showAlert2Action(title: getAlertMessage(msg: .NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.SUACAUTRALOI), btnBTitle: getAlertMessage(msg: ALERT.VIEWHOIDAP), actionA: {
+                    let scr = TraLoiHoiDapController()
+                    scr.hoiDap = hd
+                    self.navigationController?.pushViewController(scr, animated: true)
+                }, actionB: { 
+                    let scr = HoiDapDetailController()
+                    scr.hoidap = hd
+                    self.navigationController?.pushViewController(scr, animated: true)
+                })
+            }
+            break
+        default:
+            if paramAdmin["quyen"] == "10"{
+                showAlert2Action(title: getAlertMessage(msg: .NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.SUACAUTRALOI), btnBTitle: getAlertMessage(msg: ALERT.VIEWHOIDAP), actionA: {
+                    let scr = TraLoiHoiDapController()
+                    scr.hoiDap = hd
+                    self.navigationController?.pushViewController(scr, animated: true)
+                }, actionB: {
+                    let scr = HoiDapDetailController()
+                    scr.hoidap = hd
+                    self.navigationController?.pushViewController(scr, animated: true)
+                })
+            } else {
+                let scr = HoiDapDetailController()
+                scr.hoidap = hd
+                self.navigationController?.pushViewController(scr, animated: true)
+            }
+            break
+        }
+    }
 }
 
 func sendRequestNoLoading(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
