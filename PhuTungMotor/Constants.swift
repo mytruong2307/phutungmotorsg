@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.102"
+let ip = "192.168.1.103"
 let domain = "http://\(ip)/phutungmoto"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"
@@ -53,6 +53,9 @@ enum API:String {
     case SEARCHACC = "timkiemtaikhoan"
     case TOKEN = "getToken"
     case TRALOI = "traloi"
+    case HANGXE = "hangxe"
+    case ADDHANGXE = "themhangxe"
+    case DISABLE = "disablehangxe"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -143,6 +146,15 @@ enum ALERT:String {
     case OKDENY = "Bạn từ chối thành công, câu hỏi cần có câu trả lời mới."
     case CONFIRM = "Câu trả lời sẽ được khách hàng nhìn thầy. Bạn xác nhận câu trả lời?"
     case OKCONFIRM = "Xác nhận thành công"
+    case CHONHINH = "Chọn hình của Hãng xe"
+    case CHUP = "Chụp ảnh"
+    case GALLERY = "Thư viện hình"
+    case NOCAMERA =  "Điện thoại của bạn không có camera"
+    case NOPHOTO = "Bạn chưa chọn hình cho hãng xe mới"
+    case OKADD = "Thêm mới thành công"
+    case UPDATEHX = "Chỉnh Sửa"
+    case DELETEHX = "Xoá"
+    case DELETESURE = "Bạn có chắc XOÁ hãng xe này?"
     
     func getAlertMessage() -> String{
         return self.rawValue
@@ -233,6 +245,9 @@ enum UI:String {
     case LBL_ANSWER = "TRẢ LỜI CÂU HỎI"
     case LBL_NGUOIHOI = "Người hỏi: "
     case LBL_ISDONG = "Đóng câu hỏi: "
+    case LBL_HANGXE = "DANH SÁCH HÃNG XE"
+    case LBL_ADDHANGXE = "THÊM HÃNG XE"
+    case LBL_UPDATEHANGXE = "CẬP NHẬT HÃNG"
     
     case TTL_FORGOTPASS = "QUÊN MẬT KHẨU"
     case TTL_UPDATEINFO = "CẬP NHẬT THÔNG TIN"
@@ -255,6 +270,7 @@ enum UI:String {
     case BTN_ANSWER = "TRẢ LỜI"
     case BTN_DENY = "TỪ CHỐI"
     case BTN_XACNHAN = "XÁC NHẬN"
+    case BTN_ADD = "THÊM"
     
     case DAY = "ngày trước"
     case HOUR = "giờ trước"

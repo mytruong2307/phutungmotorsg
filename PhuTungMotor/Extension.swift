@@ -545,6 +545,132 @@ extension UIViewController
             }.resume()
     }
     
+    func sendRequestAdmin(linkAPI:API, param:Dictionary<String,Any>? = paramAdmin, method:Method = .post, extraLink:String? = nil , isLoading:Bool, filename:String , completion:@escaping (Dictionary<String,Any>?)->()) {
+        // hien bieu tuong load khi gui
+        let viewTam:UIView = {
+            let v = UIView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        //Hinh nen
+        let img:UIImageView = UIImageView()
+        img.image = #imageLiteral(resourceName: "bg4")
+        
+        //Visual Effect
+        let blurEffect = UIBlurEffect(style: .light)
+        let vis:UIVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        let act:UIActivityIndicatorView = {
+            let v = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+            v.color = #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1)
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        
+        if isLoading {
+            view.addSubview(viewTam)
+            view.addViewFullScreen(views: viewTam)
+            viewTam.addViewFullScreen(views: img)
+            viewTam.addViewFullScreen(views: vis)
+            viewTam.addSubview(act)
+            act.centerXAnchor.constraint(equalTo: viewTam.centerXAnchor).isActive = true
+            act.centerYAnchor.constraint(equalTo: viewTam.centerYAnchor).isActive = true
+            act.startAnimating()
+        }
+        //Phan chinh upload data
+        showLog(mess: param!)
+        var link = linkAPI.LINK_ADMIN
+        if method == .get {
+            if param != nil {
+                link = link + "?" + (param?.convertToString())!
+            }
+        }
+        if extraLink != nil {
+            link = link + "/" + extraLink! // For Laravel
+        }
+        var request = URLRequest(url: URL(string: link)!)
+        if method == .post {
+            request = createRequest(param: param!, filename: filename, strURL: link)
+        }
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, res, err) in
+            if err == nil {
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    if let result = object as? Dictionary<String,Any> {
+                        DispatchQueue.main.async {
+                            if isLoading {
+                                act.stopAnimating()
+                                act.hidesWhenStopped = true
+                                viewTam.removeFromSuperview()
+                                self.view.layoutIfNeeded()
+                            }
+                            let res = result[getResultAPI(link: API.DATA_RES)] as! String
+                            if res == getResultAPI(link: API.RES_OK) {
+                                let nhanvien = result["nv"] as! Dictionary<String,Any>
+                                let email = nhanvien["email"] as! String
+                                showLog(mess: email)
+                                showLog(mess: kh!.email)
+                                if email == kh?.email {
+                                    paramAdmin["token"] = nhanvien["maxacnhan"] as? String
+                                    if paramAdmin["newToken"] as! String == "1" {
+                                        paramAdmin["newToken"] = "0"
+                                    }
+                                    completion(result)
+                                } else {
+                                    self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.DIFERRENTUSER), complete: {
+                                        let _ = self.navigationController?.popToRootViewController(animated: true)
+                                    })
+                                }
+                            } else {
+                                let err = result[getResultAPI(link: API.DATA_ERR)] as! String
+                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: err, complete: {
+                                    let _ = self.navigationController?.popToRootViewController(animated: true)
+                                })
+                            }
+                        }
+                    } else {
+                        printConsole(csl: CONSOLE.DICTIONARY)
+                        DispatchQueue.main.async {
+                            if isLoading {
+                                act.stopAnimating()
+                                act.hidesWhenStopped = true
+                                viewTam.removeFromSuperview()
+                                self.view.layoutIfNeeded()
+                            }
+                            showLog(mess: link)
+                            completion(nil)
+                        }
+                    }
+                } catch{
+                    printConsole(csl: CONSOLE.JSON)
+                    DispatchQueue.main.async {
+                        if isLoading {
+                            act.stopAnimating()
+                            act.hidesWhenStopped = true
+                            viewTam.removeFromSuperview()
+                            self.view.layoutIfNeeded()
+                        }
+                        showLog(mess: link)
+                        completion(nil)
+                    }
+                }
+            } else {
+                printConsole(csl: CONSOLE.URLERROR)
+                showLog(mess: link)
+                DispatchQueue.main.async {
+                    if isLoading {
+                        act.stopAnimating()
+                        act.hidesWhenStopped = true
+                        viewTam.removeFromSuperview()
+                        self.view.layoutIfNeeded()
+                    }
+                    completion(nil)
+                }
+                
+            }
+            }.resume()
+    }
     func sendRequestAdmin(linkAPI:API, param:Dictionary<String,Any>? = paramAdmin, method:Method = .post, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
         
         var link = linkAPI.LINK_ADMIN
@@ -576,7 +702,7 @@ extension UIViewController
                                 showLog(mess: kh!.email)
                                 if email == kh?.email {
                                     paramAdmin["token"] = nhanvien["maxacnhan"] as? String
-                                    if paramAdmin["newToken"] == "1" {
+                                    if paramAdmin["newToken"] as! String == "1" {
                                         paramAdmin["newToken"] = "0"
                                     }
                                     completion(data)
@@ -587,7 +713,8 @@ extension UIViewController
                                     
                                 }
                             } else {
-                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: getAlertMessage(msg: ALERT.NOPERMISSION), complete: {
+                                let err = data[getResultAPI(link: API.DATA_ERR)] as! String
+                                self.showAlertActionOK(title: getAlertMessage(msg: ALERT.ERROR), mess: err, complete: {
                                     let _ = self.navigationController?.popToRootViewController(animated: true)
                                 })
                             }
@@ -647,7 +774,7 @@ extension UIViewController
                                 let email = nv["email"] as! String
                                 if email == kh?.email {
                                     paramAdmin["token"] = nv["maxacnhan"] as? String
-                                    if paramAdmin["newToken"] == "1" {
+                                    if paramAdmin["newToken"] as! String == "1" {
                                         paramAdmin["newToken"] = "0"
                                     }
                                     paramAdmin["quyen"] = nv["quyen"] as? String
@@ -694,7 +821,7 @@ extension UIViewController
             }
             }.resume()
     }
-
+    
     
     func sendRequestThread(linkAPI:API, param:Dictionary<String,Any>? = nil, method:Method = .get, extraLink:String? = nil ,completion:@escaping (Dictionary<String,Any>?)->()) {
         // hien bieu tuong load khi gui
@@ -812,9 +939,9 @@ extension UIViewController
                     self.view.layoutIfNeeded()
                 }
             }
-        }.resume()
+            }.resume()
     }
-
+    
     func actionHoiDap(hd:HoiDap) {
         switch hd.trangthai {
         case 0:
@@ -823,7 +950,8 @@ extension UIViewController
             navigationController?.pushViewController(scr, animated: true)
             break
         case 1:
-            if paramAdmin["quyen"] == "1" || paramAdmin["quyen"] == "10" {
+            let quyen = paramAdmin["quyen"] as! String
+            if quyen == "1" || quyen == "10" {
                 let scr = XacNhanHDController()
                 scr.hoiDap = hd
                 self.navigationController?.pushViewController(scr, animated: true)
@@ -832,7 +960,7 @@ extension UIViewController
                     let scr = TraLoiHoiDapController()
                     scr.hoiDap = hd
                     self.navigationController?.pushViewController(scr, animated: true)
-                }, actionB: { 
+                }, actionB: {
                     let scr = HoiDapDetailController()
                     scr.hoidap = hd
                     self.navigationController?.pushViewController(scr, animated: true)
@@ -840,7 +968,7 @@ extension UIViewController
             }
             break
         default:
-            if paramAdmin["quyen"] == "10"{
+            if paramAdmin["quyen"] as! String == "10"{
                 showAlert2Action(title: getAlertMessage(msg: .NOTICE), mess: getAlertMessage(msg: ALERT.CHONTRANG), btnATitle: getAlertMessage(msg: ALERT.SUACAUTRALOI), btnBTitle: getAlertMessage(msg: ALERT.VIEWHOIDAP), actionA: {
                     let scr = TraLoiHoiDapController()
                     scr.hoiDap = hd
@@ -1151,4 +1279,61 @@ func showNumber(so:IntMax)->String {
     return kq
     
 }
+func saveImage (image: UIImage, path: String ) -> Bool{
+    let data = UIImageJPEGRepresentation(image, 1.0)
+    let url:URL = URL(string: path)!
+    var result = false
+    do {
+        result = ((try data?.write(to: url)) != nil)
+    } catch {
+        showLog(mess: "Luu hinh bi loi")
+    }
+    return result
+}
 
+func fileInDocumentsDirectory(filename: String) -> String {
+    let documentsFolderPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+    return "\(documentsFolderPath)\(filename)"
+}
+
+func createBodyWithParameters(parameters: Dictionary<String,Any>, filename:String, boundary: String) -> Data {
+    let body = NSMutableData()
+    for pr in parameters{
+        if let image = pr.value as? [UIImage]
+        {
+            for (index,img) in image.enumerated() {
+                let data = UIImageJPEGRepresentation(img, 0.5)
+                var fname:String = "\(getTime())_\(index)).jpg"
+                if filename != "" {
+                    if index == 0 {
+                        fname = "\(filename).jpg"
+                    } else {
+                        fname = "\(filename)_\(index)).jpg"
+                    }
+                }
+                let mimetype = "image/jpg"
+                body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+                body.append("Content-Disposition:form-data; name=\"\(pr.key)\"; filename=\"\(fname)\"\r\n".data(using: String.Encoding.utf8)!)
+                body.append("Content-Type: \(mimetype)\r\n\r\n".data(using: String.Encoding.utf8)!)
+                body.append(data!)
+                body.append("\r\n".data(using: String.Encoding.utf8)!)
+            }
+        } else if let value = pr.value as? String {
+            body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(pr.key)\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+            body.append("\(value)\r\n".data(using: String.Encoding.utf8)!)
+        }
+    }
+    body.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+    return body as Data
+}
+
+func createRequest (param : Dictionary<String,Any> , filename:String, strURL : String) -> URLRequest {
+    let boundary = generateBoundaryString()
+    let url = URL(string: strURL)
+    var request = URLRequest(url: url!)
+    request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+    request.httpMethod = "POST"
+    request.httpBody = createBodyWithParameters(parameters: param, filename : filename , boundary: boundary)
+    return request
+}

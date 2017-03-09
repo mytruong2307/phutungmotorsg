@@ -11,7 +11,7 @@ import UIKit
 var kh:KhachHang?
 var gioHang:Array<GioHang> = []
 var thanhtoan:Int = -1
-var paramAdmin = Dictionary<String,String>()
+var paramAdmin = Dictionary<String,Any>()
 
 class BaseController: UIViewController, UISearchBarDelegate {
     

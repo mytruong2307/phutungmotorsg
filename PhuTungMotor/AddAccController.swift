@@ -192,7 +192,7 @@ class AddAccController: MenuAdminController {
         vertical = "\(vertical)[v\(i)(30)][v\(i+1)(1)]-10-"
         i += 2
         
-        if paramAdmin["quyen"] == "10" {
+        if paramAdmin["quyen"] as! String == "10" {
             let vAdmin:UIView = UIView()
             arrView.append(vAdmin)
             
@@ -258,7 +258,7 @@ class AddAccController: MenuAdminController {
             VThongTin.addContraintByVSF(VSF: "V:|[v0]|", views: lblThongTin)
             VThongTin.addContraintByVSF(VSF: "V:|[v0]|", views: swDN)
             
-        } else if paramAdmin["quyen"] == "1" {
+        } else if paramAdmin["quyen"] as! String == "1" {
             let vAcc:UIView = UIView()
             arrView.append(vAcc)
             vertical = "\(vertical)[v\(i)(30)]-10-"
@@ -532,7 +532,7 @@ class AddAccController: MenuAdminController {
         
     }
     
-    func changeCustomerToEmployee(param:Dictionary<String,String>, extra:String)  {
+    func changeCustomerToEmployee(param:Dictionary<String,Any>, extra:String)  {
         self.sendRequestAdmin(linkAPI: API.CHUYENNHANVIEN, param: param, method: Method.post, extraLink: extra, completion: { (object) in
             if let err = object?[getResultAPI(link: API.DATA_ERR)] as? Int {
                 switch err {

@@ -24,7 +24,10 @@
 		847BE3C91E6085CB00D96F88 /* SuaDNController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847BE3C81E6085CB00D96F88 /* SuaDNController.swift */; };
 		847E4CD81E5C235900B84FFF /* ChiTietDHController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */; };
 		847E4CDA1E5C297B00B84FFF /* CellProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847E4CD91E5C297B00B84FFF /* CellProduct.swift */; };
+		847F120D1E71955100C225B6 /* ChangeHXController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847F120C1E71955100C225B6 /* ChangeHXController.swift */; };
 		848607F11E6C062600C9DE02 /* AddAccController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848607F01E6C062600C9DE02 /* AddAccController.swift */; };
+		84862B531E7048EF007278BB /* HangXeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84862B521E7048EF007278BB /* HangXeController.swift */; };
+		84862B551E704CF8007278BB /* CellHangXe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84862B541E704CF8007278BB /* CellHangXe.swift */; };
 		8486DE311E6FA1AB00830AF8 /* LstHoiDapAdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */; };
 		8486DE331E6FBC9F00830AF8 /* TraLoiHoiDapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */; };
 		8486E19F1E6034320085782D /* ListPerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486E19E1E6034320085782D /* ListPerController.swift */; };
@@ -97,7 +100,10 @@
 		847BE3C81E6085CB00D96F88 /* SuaDNController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuaDNController.swift; sourceTree = "<group>"; };
 		847E4CD71E5C235900B84FFF /* ChiTietDHController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChiTietDHController.swift; sourceTree = "<group>"; };
 		847E4CD91E5C297B00B84FFF /* CellProduct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellProduct.swift; sourceTree = "<group>"; };
+		847F120C1E71955100C225B6 /* ChangeHXController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeHXController.swift; sourceTree = "<group>"; };
 		848607F01E6C062600C9DE02 /* AddAccController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddAccController.swift; sourceTree = "<group>"; };
+		84862B521E7048EF007278BB /* HangXeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HangXeController.swift; sourceTree = "<group>"; };
+		84862B541E704CF8007278BB /* CellHangXe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellHangXe.swift; sourceTree = "<group>"; };
 		8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LstHoiDapAdController.swift; sourceTree = "<group>"; };
 		8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TraLoiHoiDapController.swift; sourceTree = "<group>"; };
 		8486E19E1E6034320085782D /* ListPerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListPerController.swift; sourceTree = "<group>"; };
@@ -194,6 +200,8 @@
 				8486DE301E6FA1AB00830AF8 /* LstHoiDapAdController.swift */,
 				8486DE321E6FBC9F00830AF8 /* TraLoiHoiDapController.swift */,
 				848C8FFF1E7013F500AE4E24 /* XacNhanHDController.swift */,
+				84862B521E7048EF007278BB /* HangXeController.swift */,
+				847F120C1E71955100C225B6 /* ChangeHXController.swift */,
 			);
 			name = Admin;
 			sourceTree = "<group>";
@@ -245,6 +253,7 @@
 				8490FE471E5ED8BB001BE617 /* CellPermission.swift */,
 				84E8DBCE1E5FD2EC00636E26 /* CellPhanQuyen.swift */,
 				846906EB1E6AD7A000B40713 /* CellTaiKhoan.swift */,
+				84862B541E704CF8007278BB /* CellHangXe.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -473,6 +482,7 @@
 				8486E19F1E6034320085782D /* ListPerController.swift in Sources */,
 				84B03A101E189FEC0030B767 /* SanPham.swift in Sources */,
 				84B03A0C1E189FAD0030B767 /* HangXe.swift in Sources */,
+				847F120D1E71955100C225B6 /* ChangeHXController.swift in Sources */,
 				84BDBAD61E599D7A0082D571 /* GioHang.swift in Sources */,
 				846906E81E6ACA1700B40713 /* TaiKhoanController.swift in Sources */,
 				8492EFB11E0CD841005D58D4 /* IntroController.swift in Sources */,
@@ -504,6 +514,7 @@
 				84D47FFC1E1F9A3B00F93FFD /* HoiDapDetailController.swift in Sources */,
 				8492EFC61E0CDAC5005D58D4 /* BaseController.swift in Sources */,
 				8486E1A11E6035B60085782D /* MenuAdminController.swift in Sources */,
+				84862B531E7048EF007278BB /* HangXeController.swift in Sources */,
 				84A43E731E55924D00764564 /* MyProtocol.swift in Sources */,
 				84BCDC681E26350800A2A7D3 /* CellLoaiXe.swift in Sources */,
 				8492EFBD1E0CDA38005D58D4 /* BaseTableCell.swift in Sources */,
@@ -515,6 +526,7 @@
 				84A9969D1E4D5DE500FBFE86 /* ProductController.swift in Sources */,
 				847BE3C91E6085CB00D96F88 /* SuaDNController.swift in Sources */,
 				84FAEEEE1E0CD22400745B1D /* AppDelegate.swift in Sources */,
+				84862B551E704CF8007278BB /* CellHangXe.swift in Sources */,
 				8487274A1E1A8C3F008D3F0E /* TinTucController.swift in Sources */,
 				8486DE311E6FA1AB00830AF8 /* LstHoiDapAdController.swift in Sources */,
 				846AEF0A1E5B2DFE000805C9 /* DonHang.swift in Sources */,

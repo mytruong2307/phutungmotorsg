@@ -113,7 +113,7 @@ class MenuAdminController: BaseController {
             navigationController?.pushViewController(SuaDNController(), animated: true)
             break
         case "Hãng xe":
-            
+            navigationController?.pushViewController(HangXeController(), animated: true)
             break
         case "Loại xe":
             
