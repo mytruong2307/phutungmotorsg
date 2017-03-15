@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 
-let ip = "192.168.1.103"
-let domain = "http://\(ip)/phutungmoto"
+let ip = "localhost"
+let domain = "http://\(ip)/phutungmotorsg"
 //let ip = ""
 //let domain = "http://phutungmotorsg.pe.hu"
 
@@ -55,7 +55,7 @@ enum API:String {
     case TRALOI = "traloi"
     case HANGXE = "hangxe"
     case ADDHANGXE = "themhangxe"
-    case DISABLE = "disablehangxe"
+    case DISABLEHANGXE = "disablehangxe"
     
     case DATA_RES = "result"
     case DATA_ERR = "err"
@@ -154,7 +154,8 @@ enum ALERT:String {
     case OKADD = "Thêm mới thành công"
     case UPDATEHX = "Chỉnh Sửa"
     case DELETEHX = "Xoá"
-    case DELETESURE = "Bạn có chắc XOÁ hãng xe này?"
+    case DISABLESURE = "Bạn có chắc XÓA hãng xe này?"
+    case OKDISHANGXE = "Disable Hãng xe thành công"
     
     func getAlertMessage() -> String{
         return self.rawValue

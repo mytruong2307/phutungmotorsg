@@ -128,9 +128,22 @@ extension HangXeController:UICollectionViewDelegate, UICollectionViewDataSource,
             scr.hangxe = self.arrHangXe[indexPath.row - 1]
             self.navigationController?.pushViewController(scr, animated: true)
         }) { 
-            self.showAlertAction(title: getAlertMessage(msg: .NOTICE), mess: getAlertMessage(msg: ALERT.DELETESURE), complete: {
-                self.sendRequestAdmin(linkAPI: API.DISABLE, completion: { (object) in
-                    
+            self.showAlertAction(title: getAlertMessage(msg: .NOTICE), mess: getAlertMessage(msg: ALERT.DISABLESURE), complete: {
+                var param = paramAdmin
+                param["truycap"] = "6"
+                param["id"] = "\(self.arrHangXe[indexPath.row - 1].id)"
+                showLog(mess: param)
+                self.sendRequestAdmin(linkAPI: API.DISABLEHANGXE, param: param, method: Method.post, extraLink: nil, completion: { (object) in
+                    //Disable Hang xe
+                    showLog(mess: object!)
+                    if let _ = object?[getResultAPI(link: API.DATA_RETURN)] as? Dictionary<String,Any> {
+                        self.arrHangXe.remove(at: indexPath.row - 1)
+                        collectionView.reloadData()
+                        self.showAlert(title: getAlertMessage(msg: ALERT.NOTICE), mess: getAlertMessage(msg: ALERT.OKDISHANGXE))
+                    } else {
+                        let mess = object?[getResultAPI(link: API.DATA_RETURN)] as! String
+                        self.showAlert(title: getAlertMessage(msg: ALERT.ERROR), mess: mess)
+                    }
                 })
             })
         }

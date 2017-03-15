@@ -390,7 +390,7 @@ extension BaseController:UITableViewDelegate, UITableViewDataSource
                     //Lay token truoc khi chuyen
 
                     sendRequestNoLoading(linkAPI: API.TOKEN, param: nil, method: .get, extraLink: "\(kh!.email)", completion: { (object) in
-                        paramAdmin["token"] = object?["data"] as? String
+                        paramAdmin["token"] = object?["data"] as! String
                         paramAdmin["newToken"] = "0"
                         paramAdmin["truycap"] = "2"
                         showLog(mess: paramAdmin)
